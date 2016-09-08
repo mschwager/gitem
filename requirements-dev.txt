@@ -1,0 +1,4 @@
+nose2
+cov-core
+flake8
+coveralls
