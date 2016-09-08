@@ -33,8 +33,9 @@ class Api(object):
 
     BASE_URL = "https://api.github.com"
 
-    def __init__(self, oauth2_token=None):
+    def __init__(self, oauth2_token=None, requester=requests.request):
         self.oauth2_token = oauth2_token
+        self.requester = requester
 
     def call(self, method, url, params=None):
         """
@@ -46,7 +47,7 @@ class Api(object):
         if self.oauth2_token:
             params["access_token"] = self.oauth2_token
 
-        response = requests.request(method, url, params=params)
+        response = self.requester(method, url, params=params)
 
         if response.status_code != requests.codes.OK:
             raise ApiCallException(response.status_code, response.json())
