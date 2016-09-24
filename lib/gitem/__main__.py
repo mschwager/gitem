@@ -1,22 +1,84 @@
 #!/usr/bin/env python
 
-import argparse
-import pprint
+from __future__ import print_function
 
+import argparse
+
+from gitem import api
 from gitem import analytics
 
 
-def organization(*args, **kwargs):
-    pprint.pprint(
-        analytics.get_organization_information(kwargs['organization'])
+def leftpad_print(s, leftpad_length=0):
+    print(" " * leftpad_length + s)
+
+
+def organization(ghapi, *args, **kwargs):
+    organization = kwargs['organization']
+
+    organization_info = analytics.get_organization_information(
+        ghapi,
+        organization
+    )
+    organization_repositories = analytics.get_organization_repositories(
+        ghapi,
+        organization
     )
 
+    for human_readable_name, api_info in organization_info.items():
+        leftpad_print(
+            "{}: {}".format(human_readable_name, api_info),
+            leftpad_length=0
+        )
 
-def repository(*args, **kwargs):
+    leftpad_print("Repositories:", leftpad_length=0)
+
+    def repository_popularity(repository):
+        return (
+            int(repository['Watchers']) +
+            int(repository['Stars']) +
+            int(repository['Forks'])
+        )
+
+    repositories = sorted(
+        organization_repositories,
+        key=repository_popularity,
+        reverse=True
+    )
+    repository_count = len(organization_repositories) if kwargs['verbose'] else 10
+    repositories = repositories[:repository_count]
+
+    for repository in repositories:
+        for human_readable_name, api_info in repository.items():
+            leftpad_print(
+                "{}: {}".format(human_readable_name, api_info),
+                leftpad_length=2
+            )
+
+        leftpad_print("Contributors:", leftpad_length=2)
+
+        repository_name = repository['Repository Name']
+        repository_contributors = analytics.get_repository_contributors(
+            ghapi,
+            organization,
+            repository_name
+        )
+        contributor_count = len(repository_contributors) if kwargs['verbose'] else 10
+
+        for contributor in repository_contributors[:contributor_count]:
+            for human_readable_name, api_info in contributor.items():
+                leftpad_print(
+                    "{}: {}".format(human_readable_name, api_info),
+                    leftpad_length=4
+                )
+
+        leftpad_print("", leftpad_length=0)
+
+
+def repository(ghapi, *args, **kwargs):
     pass
 
 
-def user(*args, **kwargs):
+def user(ghapi, *args, **kwargs):
     pass
 
 
@@ -75,7 +137,9 @@ def main():
         "user": user,
     }
 
-    dispatch[args.command](**vars(args))
+    ghapi = api.Api(args.oauth2_token)
+
+    dispatch[args.command](ghapi, **vars(args))
 
 if __name__ == "__main__":
     main()
