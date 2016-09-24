@@ -21,18 +21,6 @@ class TestApi(unittest.TestCase):
     def assertOk(self, status_code):
         self.assertEqual(status_code, requests.codes.OK)
 
-    def assertBadRequest(self, status_code):
-        self.assertEqual(status_code, requests.codes.BAD_REQUEST)
-
-    def assertUnprocessableEntity(self, status_code):
-        self.assertEqual(status_code, requests.codes.UNPROCESSABLE_ENTITY)
-
-    def assertForbidden(self, status_code):
-        self.assertEqual(status_code, requests.codes.FORBIDDEN)
-
-    def assertUnauthorized(self, status_code):
-        self.assertEqual(status_code, requests.codes.UNAUTHORIZED)
-
     @staticmethod
     def api_will_return(json_return_value, status_code=requests.codes.OK, oauth2_token=None):
         assert isinstance(json_return_value, dict)
@@ -96,9 +84,7 @@ class TestApi(unittest.TestCase):
         with self.assertRaises(api.ApiCallException) as e:
             mocked_api.get_public_organization("unused")
 
-        status_code = e.exception.code
-
-        self.assertBadRequest(status_code)
+        self.assertTrue(e.exception.bad_request)
 
     def test_invalid_json_argument_type(self):
         will_return = mocked_api_results.BAD_JSON_VALUES_RESULT
@@ -110,9 +96,7 @@ class TestApi(unittest.TestCase):
         with self.assertRaises(api.ApiCallException) as e:
             mocked_api.get_public_organization("unused")
 
-        status_code = e.exception.code
-
-        self.assertBadRequest(status_code)
+        self.assertTrue(e.exception.bad_request)
 
     def test_invalid_json_field(self):
         will_return = mocked_api_results.INVALID_FIELDS_RESULT
@@ -124,9 +108,7 @@ class TestApi(unittest.TestCase):
         with self.assertRaises(api.ApiCallException) as e:
             mocked_api.get_public_organization("unused")
 
-        status_code = e.exception.code
-
-        self.assertUnprocessableEntity(status_code)
+        self.assertTrue(e.exception.unprocessable_entity)
 
     def test_bad_credentials(self):
         will_return = mocked_api_results.BAD_CREDENTIALS_RESULT
@@ -138,9 +120,7 @@ class TestApi(unittest.TestCase):
         with self.assertRaises(api.ApiCallException) as e:
             mocked_api.get_public_organization("unused")
 
-        status_code = e.exception.code
-
-        self.assertUnauthorized(status_code)
+        self.assertTrue(e.exception.unauthorized)
 
     def test_maximum_bad_credentials(self):
         will_return = mocked_api_results.MAXIMUM_BAD_CREDENTIALS_RESULT
@@ -152,9 +132,7 @@ class TestApi(unittest.TestCase):
         with self.assertRaises(api.ApiCallException) as e:
             mocked_api.get_public_organization("unused")
 
-        status_code = e.exception.code
-
-        self.assertForbidden(status_code)
+        self.assertTrue(e.exception.forbidden)
 
     def test_authenticated_endpoint_ok(self):
         will_return = mocked_api_results.STANDARD_API_RESULT

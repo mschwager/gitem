@@ -12,9 +12,34 @@ class AuthenticationRequiredException(Exception):
 
 class ApiCallException(Exception):
 
+    rate_limiting_url = 'https://developer.github.com/v3/#rate-limiting'
+
     def __init__(self, code, message):
         self.code = code
         self.message = message
+
+    @property
+    def bad_request(self):
+        return self.code == requests.codes.BAD_REQUEST
+
+    @property
+    def unprocessable_entity(self):
+        return self.code == requests.codes.UNPROCESSABLE_ENTITY
+
+    @property
+    def forbidden(self):
+        return self.code == requests.codes.FORBIDDEN
+
+    @property
+    def unauthorized(self):
+        return self.code == requests.codes.UNAUTHORIZED
+
+    @property
+    def rate_limiting(self):
+        return (
+            self.forbidden and
+            self.message.get('documentation_url') == self.rate_limiting_url
+        )
 
     def __str__(self):
         return "{}: {}".format(self.code, json.dumps(self.message))

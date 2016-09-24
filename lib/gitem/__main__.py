@@ -139,7 +139,19 @@ def main():
 
     ghapi = api.Api(args.oauth2_token)
 
-    dispatch[args.command](ghapi, **vars(args))
+    try:
+        dispatch[args.command](ghapi, **vars(args))
+    except api.ApiCallException as e:
+        if e.rate_limiting:
+            leftpad_print(
+                "Your API requests are being rate-limited. " +
+                "Please include an OAuth2 token and read the following:",
+                leftpad_length=0
+            )
+            leftpad_print(e.rate_limiting_url, leftpad_length=0)
+        else:
+            # Re-raise original exception
+            raise
 
 if __name__ == "__main__":
     main()
