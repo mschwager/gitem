@@ -77,7 +77,7 @@ class TestApi(unittest.TestCase):
 
         # The API call we make doesn't matter, it will return the same result
         # no matter what
-        status_code, result = mocked_api.get_public_organization("unused")
+        result, status_code = mocked_api.get_public_organization("unused")
 
         expected = mocked_api_results.get_result_value(
             mocked_api_results.STANDARD_API_RESULT
@@ -164,7 +164,7 @@ class TestApi(unittest.TestCase):
             oauth2_token="VALUE DOESN'T MATTER"
         )
 
-        status_code, result = mocked_api.get_organization("unused")
+        result, status_code = mocked_api.get_organization("unused")
 
         expected = mocked_api_results.get_result_value(
             mocked_api_results.STANDARD_API_RESULT
@@ -197,7 +197,7 @@ class TestApi(unittest.TestCase):
 
         mocked_api = self.paged_api_will_return(mocked_json_values, mocked_status_codes)
 
-        for status_code, result in mocked_api.get_organizations_public_repositories("unused"):
+        for result, status_code in mocked_api.get_organizations_public_repositories("unused"):
             expected = mocked_api_results.get_result_value(
                 mocked_api_results.STANDARD_API_RESULT
             )

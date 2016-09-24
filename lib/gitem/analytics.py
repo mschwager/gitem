@@ -4,7 +4,7 @@ import collections
 
 
 def get_organization_information(ghapi, organization):
-    organization_info = ghapi.get_public_organization(
+    organization_info, _ = ghapi.get_public_organization(
         organization
     )
 
@@ -53,7 +53,7 @@ def get_organization_repositories(ghapi, organization):
             human_readable_name: organization_repository[api_name]
             for api_name, human_readable_name in api_name_to_human_readable_name.items()
         }
-        for organization_repositories in paged_organization_repositories
+        for organization_repositories, _ in paged_organization_repositories
         for organization_repository in organization_repositories
     ]
 
@@ -78,7 +78,7 @@ def get_repository_contributors(ghapi, owner, repository):
             human_readable_name: repository_contributor[api_name]
             for api_name, human_readable_name in api_name_to_human_readable_name.items()
         }
-        for repository_contributors in paged_repository_contributors
+        for repository_contributors, _ in paged_repository_contributors
         for repository_contributor in repository_contributors
     ]
 

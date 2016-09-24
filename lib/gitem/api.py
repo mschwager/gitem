@@ -64,7 +64,7 @@ class Api(object):
         url = self.BASE_URL + endpoint
         response = self.call(method, url, params)
 
-        return response.json()
+        return (response.json(), response.status_code)
 
     def paginated_json_call(self, method, endpoint, params=None):
         """
@@ -78,7 +78,7 @@ class Api(object):
         next_link = True
         while next_link:
             response = self.call(method, url, params)
-            yield response.json()
+            yield (response.json(), response.status_code)
             next_link = response.links.get("next", {})
             url = next_link.get("url")
 
