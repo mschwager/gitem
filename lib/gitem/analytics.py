@@ -70,7 +70,6 @@ def get_repository_contributors(ghapi, owner, repository):
     api_name_to_human_readable_name = collections.OrderedDict([
         ('login', 'Username'),
         ('contributions', 'Contributions'),
-        ('site_admin', 'Administrator'),
     ])
 
     human_readable_name_to_api_info = [
