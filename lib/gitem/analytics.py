@@ -40,12 +40,6 @@ def get_organization_repositories(ghapi, organization):
         ('name', 'Repository Name'),
         ('description', 'Description'),
         ('html_url', 'Github URL'),
-        ('watchers_count', 'Watchers'),
-        ('stargazers_count', 'Stars'),
-        ('forks_count', 'Forks'),
-        ('created_at', 'Created'),
-        ('updated_at', 'Last Updated'),
-        ('pushed_at', 'Last Pushed'),
     ])
 
     human_readable_name_to_api_info = [
