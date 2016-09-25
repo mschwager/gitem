@@ -111,6 +111,8 @@ class Api(object):
     def get_users_organizations(self):
         """
         Return organizations associated with an OAuth2 authenticated user
+
+        https://developer.github.com/v3/orgs/#list-your-organizations
         """
         method = "GET"
         endpoint = "/user/orgs"
@@ -123,6 +125,8 @@ class Api(object):
     def get_users_public_organizations(self, username):
         """
         Return public organizations associated with a user
+
+        https://developer.github.com/v3/orgs/#list-user-organizations
         """
         method = "GET"
         endpoint = "/users/{}/orgs".format(username)
@@ -135,6 +139,8 @@ class Api(object):
     def get_users_public_repositories(self, username, type=None, sort=None, direction=None):
         """
         Return public repositories associated with a given user
+
+        https://developer.github.com/v3/repos/#list-user-repositories
         """
         assert type in ["all", "owner", "member", None]
         assert sort in ["created", "updated", "pushed", "full_name", None]
@@ -158,6 +164,8 @@ class Api(object):
     def get_public_organization(self, organization):
         """
         Return public information associated with an organization
+
+        https://developer.github.com/v3/orgs/#get-an-organization
         """
         method = "GET"
         endpoint = "/orgs/{}".format(organization)
@@ -172,12 +180,16 @@ class Api(object):
         """
         Return information associated with an organization, OAuth2
         authenticated user must be an owner
+
+        https://developer.github.com/v3/orgs/#get-an-organization
         """
         return self.get_public_organization(organization)
 
     def get_organizations_public_repositories(self, organization, type=None):
         """
         Return public repositories associated with a given organization
+
+        https://developer.github.com/v3/repos/#list-organization-repositories
         """
         assert type in ["all", "owner", "member", None]
 
@@ -195,6 +207,8 @@ class Api(object):
     def get_organizations_public_members(self, organization):
         """
         Return public members associated with a given organization
+
+        https://developer.github.com/v3/orgs/members/
         """
         method = "GET"
         endpoint = "/orgs/{}/public_members".format(organization)
@@ -207,6 +221,8 @@ class Api(object):
     def get_repository_contributors(self, owner, repository, anon=None):
         """
         Return contributor information associated with a given repository
+
+        https://developer.github.com/v3/repos/#list-contributors
         """
         assert anon in [1, "true", None]
 
@@ -224,6 +240,8 @@ class Api(object):
     def get_repository_contributors_stats(self, owner, repository):
         """
         Return contributor stats information associated with a given repository
+
+        https://developer.github.com/v3/repos/statistics/#get-contributors-list-with-additions-deletions-and-commit-counts
         """
         method = "GET"
         endpoint = "/repos/{}/{}/stats/contributors".format(owner, repository)
