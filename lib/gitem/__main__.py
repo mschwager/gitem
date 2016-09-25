@@ -7,6 +7,8 @@ import argparse
 from gitem import api
 from gitem import analytics
 
+CONCISE_COUNT = 5
+
 
 def leftpad_print(s, leftpad_length=0):
     print(" " * leftpad_length + s)
@@ -24,6 +26,10 @@ def organization(ghapi, *args, **kwargs):
         ghapi,
         organization
     )
+    organization_members = analytics.get_organization_members(
+        ghapi,
+        organization
+    )
 
     for human_readable_name, api_info in organization_info.items():
         leftpad_print(
@@ -31,7 +37,30 @@ def organization(ghapi, *args, **kwargs):
             leftpad_length=0
         )
 
-    leftpad_print("Repositories:", leftpad_length=0)
+    leftpad_print("Public Members:", leftpad_length=0)
+
+    def member_administrator(member):
+        return member['Site Administrator']
+
+    members = sorted(
+        organization_members,
+        key=member_administrator,
+        reverse=True
+    )
+
+    member_count = len(organization_members) if verbose else CONCISE_COUNT
+    members = members[:member_count]
+
+    for member in members:
+        for human_readable_name, api_info in member.items():
+            leftpad_print(
+                "{}: {}".format(human_readable_name, api_info),
+                leftpad_length=2
+            )
+
+        leftpad_print("", leftpad_length=0)
+
+    leftpad_print("Public Repositories:", leftpad_length=0)
 
     def repository_popularity(repository):
         return (
@@ -45,7 +74,7 @@ def organization(ghapi, *args, **kwargs):
         key=repository_popularity,
         reverse=True
     )
-    repository_count = len(organization_repositories) if verbose else 10
+    repository_count = len(organization_repositories) if verbose else CONCISE_COUNT
     repositories = repositories[:repository_count]
 
     for repository in repositories:

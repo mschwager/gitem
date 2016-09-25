@@ -60,6 +60,30 @@ def get_organization_repositories(ghapi, organization):
     return human_readable_name_to_api_info
 
 
+def get_organization_members(ghapi, organization):
+    paged_organization_members = ghapi.get_organizations_public_members(
+        organization
+    )
+
+    # Order it so we get the same keys first every time
+    api_name_to_human_readable_name = collections.OrderedDict([
+        ('login', 'Username'),
+        ('site_admin', 'Site Administrator'),
+        ('html_url', 'Github URL'),
+    ])
+
+    human_readable_name_to_api_info = [
+        {
+            human_readable_name: organization_member[api_name]
+            for api_name, human_readable_name in api_name_to_human_readable_name.items()
+        }
+        for organization_members, _ in paged_organization_members
+        for organization_member in organization_members
+    ]
+
+    return human_readable_name_to_api_info
+
+
 def get_repository_contributors(ghapi, owner, repository):
     paged_repository_contributors = ghapi.get_repository_contributors(
         owner,
