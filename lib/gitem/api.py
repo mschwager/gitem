@@ -191,7 +191,7 @@ class Api(object):
 
         https://developer.github.com/v3/repos/#list-organization-repositories
         """
-        assert type in ["all", "owner", "member", None]
+        assert type in ["all", "public", "private", "forks", "sources", "member", None]
 
         method = "GET"
         endpoint = "/orgs/{}/repos".format(organization)
