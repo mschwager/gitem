@@ -88,7 +88,37 @@ def organization(ghapi, *args, **kwargs):
 
 
 def repository(ghapi, *args, **kwargs):
-    pass
+    repository = kwargs['name']
+    owner = kwargs['owner']
+    verbose = kwargs['verbose']
+
+    repository_info = analytics.get_repository_information(
+        ghapi,
+        owner,
+        repository
+    )
+    repository_contributors = analytics.get_repository_contributors(
+        ghapi,
+        owner,
+        repository
+    )
+
+    for human_readable_name, api_info in repository_info.items():
+        leftpad_print(
+            "{}: {}".format(human_readable_name, api_info),
+            leftpad_length=0
+        )
+
+    leftpad_print("Contributors:", leftpad_length=0)
+
+    contributor_count = len(repository_contributors) if verbose else CONCISE_COUNT
+
+    for contributor in repository_contributors[:contributor_count]:
+        for human_readable_name, api_info in contributor.items():
+            leftpad_print(
+                "{}: {}".format(human_readable_name, api_info),
+                leftpad_length=2
+            )
 
 
 def user(ghapi, *args, **kwargs):

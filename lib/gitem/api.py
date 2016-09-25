@@ -218,6 +218,20 @@ class Api(object):
 
         return result
 
+    def get_public_repository(self, owner, repository):
+        """
+        Return public information associated with a repository
+
+        https://developer.github.com/v3/repos/#get
+        """
+        method = "GET"
+        endpoint = "/repos/{}/{}".format(owner, repository)
+        params = {}
+
+        result = self.json_call(method, endpoint, params)
+
+        return result
+
     def get_repository_contributors(self, owner, repository, anon=None):
         """
         Return contributor information associated with a given repository
