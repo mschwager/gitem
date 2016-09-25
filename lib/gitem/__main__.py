@@ -55,23 +55,6 @@ def organization(ghapi, *args, **kwargs):
                 leftpad_length=2
             )
 
-        leftpad_print("Contributors:", leftpad_length=2)
-
-        repository_name = repository['Repository Name']
-        repository_contributors = analytics.get_repository_contributors(
-            ghapi,
-            organization,
-            repository_name
-        )
-        contributor_count = len(repository_contributors) if verbose else 10
-
-        for contributor in repository_contributors[:contributor_count]:
-            for human_readable_name, api_info in contributor.items():
-                leftpad_print(
-                    "{}: {}".format(human_readable_name, api_info),
-                    leftpad_length=4
-                )
-
         leftpad_print("", leftpad_length=0)
 
 
