@@ -117,21 +117,26 @@ def parse_args():
 
     organization = subparsers.add_parser('organization')
     organization.add_argument(
-        'organization',
+        'name',
         action='store',
         help='Github organization name'
     )
 
     repository = subparsers.add_parser('repository')
     repository.add_argument(
-        'repository',
+        'owner',
+        action='store',
+        help='Github repository owner'
+    )
+    repository.add_argument(
+        'name',
         action='store',
         help='Github repository name'
     )
 
     user = subparsers.add_parser('user')
     user.add_argument(
-        'user',
+        'name',
         action='store',
         help='Github user name'
     )
