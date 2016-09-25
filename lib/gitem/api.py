@@ -192,21 +192,13 @@ class Api(object):
 
         return result
 
-    def get_organizations_public_members(self, organization, filter=None, role=None):
+    def get_organizations_public_members(self, organization):
         """
         Return public members associated with a given organization
         """
-        assert filter in ["2fa_disabled", "all", None]
-        assert role in ["all", "admin", "member", None]
-
         method = "GET"
-        endpoint = "/orgs/{}/members".format(organization)
+        endpoint = "/orgs/{}/public_members".format(organization)
         params = {}
-
-        if filter:
-            params["filter"] = filter
-        if role:
-            params["role"] = role
 
         result = self.paginated_json_call(method, endpoint, params)
 
