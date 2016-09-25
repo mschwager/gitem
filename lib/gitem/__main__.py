@@ -15,7 +15,7 @@ def leftpad_print(s, leftpad_length=0):
 
 
 def organization(ghapi, *args, **kwargs):
-    organization = kwargs['organization']
+    organization = kwargs['name']
     verbose = kwargs['verbose']
 
     organization_info = analytics.get_organization_information(
