@@ -14,6 +14,7 @@ def leftpad_print(s, leftpad_length=0):
 
 def organization(ghapi, *args, **kwargs):
     organization = kwargs['organization']
+    verbose = kwargs['verbose']
 
     organization_info = analytics.get_organization_information(
         ghapi,
@@ -44,7 +45,7 @@ def organization(ghapi, *args, **kwargs):
         key=repository_popularity,
         reverse=True
     )
-    repository_count = len(organization_repositories) if kwargs['verbose'] else 10
+    repository_count = len(organization_repositories) if verbose else 10
     repositories = repositories[:repository_count]
 
     for repository in repositories:
@@ -62,7 +63,7 @@ def organization(ghapi, *args, **kwargs):
             organization,
             repository_name
         )
-        contributor_count = len(repository_contributors) if kwargs['verbose'] else 10
+        contributor_count = len(repository_contributors) if verbose else 10
 
         for contributor in repository_contributors[:contributor_count]:
             for human_readable_name, api_info in contributor.items():
