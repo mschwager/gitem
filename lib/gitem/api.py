@@ -107,6 +107,20 @@ class Api(object):
             next_link = response.links.get("next", {})
             url = next_link.get("url")
 
+    def get_user(self, username):
+        """
+        Return user information associated with a given username
+
+        https://developer.github.com/v3/users/#get-a-single-user
+        """
+        method = "GET"
+        endpoint = "/users/{}".format(username)
+        params = {}
+
+        result = self.json_call(method, endpoint, params)
+
+        return result
+
     @oauth2_required
     def get_users_organizations(self):
         """
@@ -132,7 +146,7 @@ class Api(object):
         endpoint = "/users/{}/orgs".format(username)
         params = {}
 
-        result = self.json_call(method, endpoint, params)
+        result = self.paginated_json_call(method, endpoint, params)
 
         return result
 
@@ -157,7 +171,7 @@ class Api(object):
         if direction:
             params["direction"] = direction
 
-        result = self.json_call(method, endpoint, params)
+        result = self.paginated_json_call(method, endpoint, params)
 
         return result
 

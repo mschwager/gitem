@@ -122,7 +122,49 @@ def repository(ghapi, *args, **kwargs):
 
 
 def user(ghapi, *args, **kwargs):
-    pass
+    username = kwargs['name']
+    verbose = kwargs['verbose']
+
+    user_info = analytics.get_user_information(
+        ghapi,
+        username
+    )
+    user_organizations = analytics.get_user_organizations(
+        ghapi,
+        username
+    )
+    user_repositories = analytics.get_user_repositories(
+        ghapi,
+        username
+    )
+
+    for human_readable_name, api_info in user_info.items():
+        leftpad_print(
+            "{}: {}".format(human_readable_name, api_info),
+            leftpad_length=0
+        )
+
+    leftpad_print("Organizations:", leftpad_length=0)
+
+    organization_count = len(user_organizations) if verbose else CONCISE_COUNT
+
+    for organization in user_organizations[:organization_count]:
+        for human_readable_name, api_info in organization.items():
+            leftpad_print(
+                "{}: {}".format(human_readable_name, api_info),
+                leftpad_length=2
+            )
+
+    leftpad_print("Repositories:", leftpad_length=0)
+
+    repository_count = len(user_repositories) if verbose else CONCISE_COUNT
+
+    for repository in user_repositories[:repository_count]:
+        for human_readable_name, api_info in repository.items():
+            leftpad_print(
+                "{}: {}".format(human_readable_name, api_info),
+                leftpad_length=2
+            )
 
 
 def parse_args():

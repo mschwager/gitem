@@ -129,3 +129,78 @@ def get_repository_contributors(ghapi, owner, repository):
     ]
 
     return human_readable_name_to_api_info
+
+
+def get_user_information(ghapi, username):
+    user_info, _ = ghapi.get_user(
+        username
+    )
+
+    # Order it so we get the same keys first every time
+    api_name_to_human_readable_name = collections.OrderedDict([
+        ('login', 'Username'),
+        ('html_url', 'Github URL'),
+        ('name', 'Name'),
+        ('company', 'Company'),
+        ('blog', 'Blog'),
+        ('location', 'Location'),
+        ('email', 'Email Address'),
+        ('created_at', 'Created'),
+        ('updated_at', 'Updated'),
+    ])
+
+    human_readable_name_to_api_info = {
+        human_readable_name: user_info[api_name]
+        for api_name, human_readable_name in api_name_to_human_readable_name.items()
+    }
+
+    return human_readable_name_to_api_info
+
+
+def get_user_organizations(ghapi, username):
+    paged_user_organizations = ghapi.get_users_public_organizations(
+        username
+    )
+
+    # Order it so we get the same keys first every time
+    api_name_to_human_readable_name = collections.OrderedDict([
+        ('login', 'Organization'),
+    ])
+
+    human_readable_name_to_api_info = [
+        {
+            human_readable_name: user_organization[api_name]
+            for api_name, human_readable_name in api_name_to_human_readable_name.items()
+        }
+        for user_organizations, _ in paged_user_organizations
+        for user_organization in user_organizations
+    ]
+
+    return human_readable_name_to_api_info
+
+
+def get_user_repositories(ghapi, username):
+    paged_user_repositories = ghapi.get_users_public_repositories(
+        username,
+        type='all',
+        sort='pushed',
+        direction='desc',
+    )
+
+    # Order it so we get the same keys first every time
+    api_name_to_human_readable_name = collections.OrderedDict([
+        ('name', 'Repository Name'),
+        ('description', 'Description'),
+        ('html_url', 'Github URL'),
+    ])
+
+    human_readable_name_to_api_info = [
+        {
+            human_readable_name: user_repository[api_name]
+            for api_name, human_readable_name in api_name_to_human_readable_name.items()
+        }
+        for user_repositories, _ in paged_user_repositories
+        for user_repository in user_repositories
+    ]
+
+    return human_readable_name_to_api_info
