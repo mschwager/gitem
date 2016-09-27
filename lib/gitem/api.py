@@ -62,6 +62,11 @@ class Api(object):
         self.oauth2_token = oauth2_token
         self.requester = requester
 
+        # https://developer.github.com/v3/media/#request-specific-version
+        self.headers = {
+            "Accept": "application/vnd.github.v3+json",
+        }
+
     def call(self, method, url, params=None):
         """
         Make a Github developer API call
@@ -72,7 +77,7 @@ class Api(object):
         if self.oauth2_token:
             params["access_token"] = self.oauth2_token
 
-        response = self.requester(method, url, params=params)
+        response = self.requester(method, url, params=params, headers=self.headers)
 
         if response.status_code != requests.codes.OK:
             raise ApiCallException(response.status_code, response.json())
