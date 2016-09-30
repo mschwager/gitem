@@ -269,17 +269,3 @@ class Api(object):
         result = self.paginated_json_call(method, endpoint, params)
 
         return result
-
-    def get_repository_contributors_stats(self, owner, repository):
-        """
-        Return contributor stats information associated with a given repository
-
-        https://developer.github.com/v3/repos/statistics/#get-contributors-list-with-additions-deletions-and-commit-counts
-        """
-        method = "GET"
-        endpoint = "/repos/{}/{}/stats/contributors".format(owner, repository)
-        params = {}
-
-        result = self.json_call(method, endpoint, params)
-
-        return result
