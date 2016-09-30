@@ -31,6 +31,7 @@ class TestApi(unittest.TestCase):
         return_value.json = mock.MagicMock(
             return_value=json_return_value
         )
+        return_value.ok = status_code == requests.codes.OK
 
         return api.Api(oauth2_token, requester=mock.MagicMock(
             return_value=return_value
@@ -52,6 +53,12 @@ class TestApi(unittest.TestCase):
         )
         return_value.json = mock.Mock(
             side_effect=json_return_values
+        )
+        type(return_value).ok = mock.PropertyMock(
+            side_effect=[
+                status_code == requests.codes.OK
+                for status_code in status_codes
+            ]
         )
 
         return api.Api(oauth2_token, requester=mock.MagicMock(

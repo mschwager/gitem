@@ -79,7 +79,7 @@ class Api(object):
 
         response = self.requester(method, url, params=params, headers=self.headers)
 
-        if response.status_code != requests.codes.OK:
+        if not response.ok:
             raise ApiCallException(response.status_code, response.json())
 
         return response
