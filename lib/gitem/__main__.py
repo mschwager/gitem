@@ -3,6 +3,7 @@
 from __future__ import print_function
 
 import argparse
+import functools
 
 from gitem import api
 from gitem import analytics
@@ -165,6 +166,28 @@ def user(ghapi, *args, **kwargs):
                 "{}: {}".format(human_readable_name, api_info),
                 leftpad_length=2
             )
+
+    user_repository_names = [
+        repository['Repository Name']
+        for repository in user_repositories
+    ]
+
+    user_repository_emails = [
+        analytics.get_repository_commit_emails(
+            ghapi,
+            username,
+            repository,
+            author=username
+        )
+        for repository in user_repository_names
+    ]
+
+    user_emails = functools.reduce(set.union, user_repository_emails, set())
+
+    leftpad_print("Emails:", leftpad_length=0)
+
+    for email in user_emails:
+        leftpad_print(str(email), leftpad_length=2)
 
 
 def parse_args():

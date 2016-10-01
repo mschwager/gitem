@@ -204,3 +204,22 @@ def get_user_repositories(ghapi, username):
     ]
 
     return human_readable_name_to_api_info
+
+
+def get_repository_commit_emails(ghapi, owner, repository, author=None):
+    paged_repository_commits = ghapi.get_repository_commits(
+        owner,
+        repository,
+        author=author
+    )
+
+    repository_commit_emails = {
+        (
+            repository_commit['commit']['author']['name'],
+            repository_commit['commit']['author']['email'],
+        )
+        for repository_commits, _ in paged_repository_commits
+        for repository_commit in repository_commits
+    }
+
+    return repository_commit_emails

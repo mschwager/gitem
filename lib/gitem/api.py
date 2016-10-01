@@ -269,3 +269,27 @@ class Api(object):
         result = self.paginated_json_call(method, endpoint, params)
 
         return result
+
+    def get_repository_commits(self, owner, repository, sha=None, path=None,
+                               author=None, since=None, until=None):
+        """
+        Return commit information associated with a given repository
+        """
+        method = "GET"
+        endpoint = "/repos/{}/{}/commits".format(owner, repository)
+        params = {}
+
+        if sha:
+            params["sha"] = sha
+        if path:
+            params["path"] = path
+        if author:
+            params["author"] = author
+        if since:
+            params["since"] = since
+        if until:
+            params["until"] = until
+
+        result = self.paginated_json_call(method, endpoint, params)
+
+        return result
