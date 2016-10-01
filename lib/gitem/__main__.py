@@ -4,6 +4,7 @@ from __future__ import print_function
 
 import argparse
 import functools
+import multiprocessing
 
 from gitem import api
 from gitem import analytics
@@ -125,6 +126,7 @@ def repository(ghapi, *args, **kwargs):
 def user(ghapi, *args, **kwargs):
     username = kwargs['name']
     verbose = kwargs['verbose']
+    processes = kwargs['processes']
 
     user_info = analytics.get_user_information(
         ghapi,
@@ -172,15 +174,15 @@ def user(ghapi, *args, **kwargs):
         for repository in user_repositories
     ]
 
-    user_repository_emails = [
-        analytics.get_repository_commit_emails(
-            ghapi,
-            username,
-            repository,
-            author=username
-        )
-        for repository in user_repository_names
-    ]
+    pool = multiprocessing.Pool(processes=processes)
+    partial_email_fn = functools.partial(
+        analytics.get_repository_commit_emails,
+        ghapi,
+        username,
+        author=username
+    )
+
+    user_repository_emails = pool.map(partial_email_fn, user_repository_names)
 
     user_emails = functools.reduce(set.union, user_repository_emails, set())
 
@@ -206,6 +208,14 @@ def parse_args():
         '--verbose',
         action='store_true',
         help='verbose output'
+    )
+    p.add_argument(
+        '-p',
+        '--processes',
+        action='store',
+        type=int,
+        default=1,
+        help='number of processes (for applicable commands)'
     )
 
     subparsers = p.add_subparsers(dest='command')
