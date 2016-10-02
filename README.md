@@ -1,6 +1,8 @@
 # Gitem
 
 [![Build Status](https://travis-ci.org/mschwager/gitem.svg?branch=master)](https://travis-ci.org/mschwager/gitem)
+[![Python Versions](https://img.shields.io/pypi/pyversions/gitem.svg)](https://img.shields.io/pypi/pyversions/gitem.svg)
+[![PyPI Version](https://img.shields.io/pypi/v/gitem.svg)](https://img.shields.io/pypi/v/gitem.svg)
 
 `Gitem` is a tool for performing Github organizational reconnaissance.
 
