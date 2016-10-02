@@ -2,6 +2,8 @@
 
 import collections
 
+import api
+
 
 def get_organization_information(ghapi, organization):
     organization_info, _ = ghapi.get_public_organization(
@@ -40,6 +42,13 @@ def get_organization_repositories(ghapi, organization):
         ('name', 'Repository Name'),
         ('description', 'Description'),
         ('html_url', 'Github URL'),
+        ('watchers_count', 'Watchers'),
+        ('stargazers_count', 'Stars'),
+        ('forks_count', 'Forks'),
+        ('created_at', 'Created'),
+        ('updated_at', 'Last Updated'),
+        ('pushed_at', 'Last Pushed'),
+
     ])
 
     human_readable_name_to_api_info = [
@@ -180,9 +189,11 @@ def get_user_organizations(ghapi, username):
 
 
 def get_user_repositories(ghapi, username):
+    # TODO: Change this back to type='all' and find a good way to grab
+    # the correct repository owners
     paged_user_repositories = ghapi.get_users_public_repositories(
         username,
-        type='all',
+        type='owner',
         sort='pushed',
         direction='desc',
     )
@@ -213,12 +224,24 @@ def get_repository_commit_emails(ghapi, owner, repository, author=None):
         author=author
     )
 
+    # https://developer.github.com/v3/git/
+    def get_commits_or_empty(repository_commits):
+        try:
+            for repository_commit in repository_commits:
+                yield repository_commit
+        except api.ApiCallException as e:
+            if e.conflict:
+                yield ([], None)
+            else:
+                # Re-raise original exception
+                raise
+
     repository_commit_emails = {
         (
             repository_commit['commit']['author']['name'],
             repository_commit['commit']['author']['email'],
         )
-        for repository_commits, _ in paged_repository_commits
+        for repository_commits, _ in get_commits_or_empty(paged_repository_commits)
         for repository_commit in repository_commits
     }
 

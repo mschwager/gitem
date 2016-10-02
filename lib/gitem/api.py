@@ -6,11 +6,11 @@ import json
 import requests
 
 
-class AuthenticationRequiredException(Exception):
+class AuthenticationRequiredException(BaseException):
     pass
 
 
-class ApiCallException(Exception):
+class ApiCallException(BaseException):
 
     rate_limiting_url = 'https://developer.github.com/v3/#rate-limiting'
 
@@ -33,6 +33,10 @@ class ApiCallException(Exception):
     @property
     def unauthorized(self):
         return self.code == requests.codes.UNAUTHORIZED
+
+    @property
+    def conflict(self):
+        return self.code == requests.codes.CONFLICT
 
     @property
     def rate_limiting(self):

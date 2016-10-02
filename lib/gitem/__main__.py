@@ -1,10 +1,15 @@
 #!/usr/bin/env python
 
 from __future__ import print_function
+from __future__ import unicode_literals
 
 import argparse
 import functools
 import multiprocessing
+import os
+import sys
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from gitem import api
 from gitem import analytics
@@ -174,22 +179,32 @@ def user(ghapi, *args, **kwargs):
         for repository in user_repositories
     ]
 
-    pool = multiprocessing.Pool(processes=processes)
-    partial_email_fn = functools.partial(
-        analytics.get_repository_commit_emails,
-        ghapi,
-        username,
-        author=username
-    )
-
-    user_repository_emails = pool.map(partial_email_fn, user_repository_names)
+    if processes:
+        pool = multiprocessing.Pool(processes=processes)
+        partial_email_fn = functools.partial(
+            analytics.get_repository_commit_emails,
+            ghapi,
+            username,
+            author=username
+        )
+        user_repository_emails = pool.map(partial_email_fn, user_repository_names)
+    else:
+        user_repository_emails = [
+            analytics.get_repository_commit_emails(
+                ghapi,
+                username,
+                repository,
+                author=username
+            )
+            for repository in user_repository_names
+        ]
 
     user_emails = functools.reduce(set.union, user_repository_emails, set())
 
     leftpad_print("Emails:", leftpad_length=0)
 
-    for email in user_emails:
-        leftpad_print(str(email), leftpad_length=2)
+    for name, email in user_emails:
+        leftpad_print("{}: {}".format(name, email), leftpad_length=2)
 
 
 def parse_args():
@@ -214,7 +229,6 @@ def parse_args():
         '--processes',
         action='store',
         type=int,
-        default=1,
         help='number of processes (for applicable commands)'
     )
 
