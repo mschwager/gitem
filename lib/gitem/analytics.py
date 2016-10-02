@@ -2,7 +2,7 @@
 
 import collections
 
-import api
+from . import api
 
 
 def get_organization_information(ghapi, organization):
