@@ -31,6 +31,8 @@ $ python lib/gitem/__main__.py -h
 
 `Gitem` can be used to collect information at various levels of granularity from Github.
 
+*Note, most commands will shorten output by default, specify `--verbose` to change this behavior*
+
 For example, let's grab some information about Facebook:
 
 ```
