@@ -8,6 +8,7 @@
 
 This could include information for:
 
+* [OSINT](https://en.wikipedia.org/wiki/Open-source_intelligence)
 * Spearphishing
 * Recruitment
 * Competitive analysis
