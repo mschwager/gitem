@@ -39,6 +39,10 @@ class ApiCallException(BaseException):
         return self.code == requests.codes.CONFLICT
 
     @property
+    def not_found(self):
+        return self.code == requests.codes.NOT_FOUND
+
+    @property
     def rate_limiting(self):
         return (
             self.forbidden and

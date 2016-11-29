@@ -286,6 +286,12 @@ def main():
                 leftpad_length=0
             )
             leftpad_print(e.rate_limiting_url, leftpad_length=0)
+        elif e.not_found:
+            leftpad_print(
+                "The requested resource was not found or private. " +
+                "Please confirm that it exists.",
+                leftpad_length=0
+            )
         else:
             # Re-raise original exception
             raise
