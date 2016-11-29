@@ -59,6 +59,14 @@ MAXIMUM_BAD_CREDENTIALS_RESULT = [
     requests.codes.FORBIDDEN,
 ]
 
+NOT_FOUND_RESULT = [
+    {
+        "message": "Not Found",
+        "documentation_url": "https://developer.github.com/v3",
+    },
+    requests.codes.NOT_FOUND,
+]
+
 
 def get_result_value(result):
     return result[0]

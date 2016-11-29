@@ -141,6 +141,18 @@ class TestApi(unittest.TestCase):
 
         self.assertTrue(e.exception.forbidden)
 
+    def test_not_found(self):
+        will_return = mocked_api_results.NOT_FOUND_RESULT
+
+        mocked_api = self.api_will_return(*will_return)
+
+        # The API call we make doesn't matter, it will return the same result
+        # no matter what
+        with self.assertRaises(api.ApiCallException) as e:
+            mocked_api.get_public_organization("unused")
+
+        self.assertTrue(e.exception.not_found)
+
     def test_authenticated_endpoint_ok(self):
         will_return = mocked_api_results.STANDARD_API_RESULT
 
