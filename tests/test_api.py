@@ -202,6 +202,41 @@ class TestApi(unittest.TestCase):
             self.assertOk(status_code)
             self.assertEqual(result, expected)
 
+    def test_get_users_public_repositories_bad_type(self):
+        type = ""
+        ghapi = api.Api()
+
+        with self.assertRaises(ValueError):
+            ghapi.get_users_public_repositories("UNUSED", type=type)
+
+    def test_get_users_public_repositories_bad_sort(self):
+        sort = ""
+        ghapi = api.Api()
+
+        with self.assertRaises(ValueError):
+            ghapi.get_users_public_repositories("UNUSED", sort=sort)
+
+    def test_get_users_public_repositories_bad_direction(self):
+        direction = ""
+        ghapi = api.Api()
+
+        with self.assertRaises(ValueError):
+            ghapi.get_users_public_repositories("UNUSED", direction=direction)
+
+    def test_get_organizations_public_repositories_bad_type(self):
+        type = ""
+        ghapi = api.Api()
+
+        with self.assertRaises(ValueError):
+            ghapi.get_organizations_public_repositories("UNUSED", type=type)
+
+    def test_get_repository_contributors_bad_anon(self):
+        anon = ""
+        ghapi = api.Api()
+
+        with self.assertRaises(ValueError):
+            ghapi.get_repository_contributors("UNUSED", "UNUSED", anon=anon)
+
 
 if __name__ == "__main__":
     unittest.main()

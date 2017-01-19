@@ -169,9 +169,17 @@ class Api(object):
 
         https://developer.github.com/v3/repos/#list-user-repositories
         """
-        assert type in ["all", "owner", "member", None]
-        assert sort in ["created", "updated", "pushed", "full_name", None]
-        assert direction in ["asc", "desc", None]
+        type_values = ["all", "owner", "member"]
+        if type not in type_values and type is not None:
+            raise ValueError("type must be one of {}".format(type_values))
+
+        sort_values = ["created", "updated", "pushed", "full_name"]
+        if sort not in sort_values and sort is not None:
+            raise ValueError("sort must be one of {}".format(sort_values))
+
+        direction_values = ["asc", "desc"]
+        if direction not in direction_values and direction is not None:
+            raise ValueError("direction must be one of {}".format(direction_values))
 
         method = "GET"
         endpoint = "/users/{}/repos".format(username)
@@ -218,7 +226,9 @@ class Api(object):
 
         https://developer.github.com/v3/repos/#list-organization-repositories
         """
-        assert type in ["all", "public", "private", "forks", "sources", "member", None]
+        type_values = ["all", "public", "private", "forks", "sources", "member"]
+        if type not in type_values and type is not None:
+            raise ValueError("type must be one of {}".format(type_values))
 
         method = "GET"
         endpoint = "/orgs/{}/repos".format(organization)
@@ -265,7 +275,9 @@ class Api(object):
 
         https://developer.github.com/v3/repos/#list-contributors
         """
-        assert anon in [1, "true", None]
+        anon_values = [1, "true"]
+        if anon not in anon_values and type is not None:
+            raise ValueError("anon must be one of {}".format(anon_values))
 
         method = "GET"
         endpoint = "/repos/{}/{}/contributors".format(owner, repository)
