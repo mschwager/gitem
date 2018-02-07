@@ -276,7 +276,7 @@ class Api(object):
         https://developer.github.com/v3/repos/#list-contributors
         """
         anon_values = [1, "true"]
-        if anon not in anon_values and type is not None:
+        if anon not in anon_values and anon is not None:
             raise ValueError("anon must be one of {}".format(anon_values))
 
         method = "GET"

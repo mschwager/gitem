@@ -237,6 +237,27 @@ class TestApi(unittest.TestCase):
         with self.assertRaises(ValueError):
             ghapi.get_repository_contributors("UNUSED", "UNUSED", anon=anon)
 
+    def test_get_repository_contributors_ok(self):
+        mocked_json_values = [
+            mocked_api_results.get_result_value(result)
+            for result in mocked_api_results.PAGED_API_RESULT
+        ]
+
+        mocked_status_codes = [
+            mocked_api_results.get_result_status_code(result)
+            for result in mocked_api_results.PAGED_API_RESULT
+        ]
+
+        mocked_api = self.paged_api_will_return(mocked_json_values, mocked_status_codes)
+
+        for result, status_code in mocked_api.get_repository_contributors("unused", "unused"):
+            expected = mocked_api_results.get_result_value(
+                mocked_api_results.STANDARD_API_RESULT
+            )
+
+            self.assertOk(status_code)
+            self.assertEqual(result, expected)
+
 
 if __name__ == "__main__":
     unittest.main()
