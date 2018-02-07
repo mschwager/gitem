@@ -16,7 +16,7 @@ with open(requirements_dev_filename) as fd:
 
 setup(
     name='gitem',
-    version='0.6.0',
+    version='0.6.1',
     description='A Github organization reconnaissance tool.',
     url='https://github.com/mschwager/gitem',
     packages=['gitem'],
