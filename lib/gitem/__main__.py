@@ -41,8 +41,6 @@ def organization(ghapi, *args, **kwargs):
             leftpad_length=0
         )
 
-    leftpad_print("Public Members:", leftpad_length=0)
-
     def member_administrator(member):
         return member['Site Administrator']
 
@@ -52,19 +50,15 @@ def organization(ghapi, *args, **kwargs):
         reverse=True
     )
 
-    member_count = len(organization_members) if verbose else CONCISE_COUNT
-    members = members[:member_count]
-
-    for member in members:
+    leftpad_print("Public Members:", leftpad_length=0)
+    member_count = len(members) if verbose else CONCISE_COUNT
+    for member in members[:member_count]:
         for human_readable_name, api_info in member.items():
             leftpad_print(
                 "{}: {}".format(human_readable_name, api_info),
                 leftpad_length=2
             )
-
         leftpad_print("", leftpad_length=0)
-
-    leftpad_print("Public Repositories:", leftpad_length=0)
 
     def repository_popularity(repository):
         return (
@@ -78,16 +72,15 @@ def organization(ghapi, *args, **kwargs):
         key=repository_popularity,
         reverse=True
     )
-    repository_count = len(organization_repositories) if verbose else CONCISE_COUNT
-    repositories = repositories[:repository_count]
 
-    for repository in repositories:
+    leftpad_print("Public Repositories:", leftpad_length=0)
+    repository_count = len(repositories) if verbose else CONCISE_COUNT
+    for repository in repositories[:repository_count]:
         for human_readable_name, api_info in repository.items():
             leftpad_print(
                 "{}: {}".format(human_readable_name, api_info),
                 leftpad_length=2
             )
-
         leftpad_print("", leftpad_length=0)
 
 
@@ -114,9 +107,7 @@ def repository(ghapi, *args, **kwargs):
         )
 
     leftpad_print("Contributors:", leftpad_length=0)
-
     contributor_count = len(repository_contributors) if verbose else CONCISE_COUNT
-
     for contributor in repository_contributors[:contributor_count]:
         for human_readable_name, api_info in contributor.items():
             leftpad_print(
@@ -150,9 +141,7 @@ def user(ghapi, *args, **kwargs):
         )
 
     leftpad_print("Organizations:", leftpad_length=0)
-
     organization_count = len(user_organizations) if verbose else CONCISE_COUNT
-
     for organization in user_organizations[:organization_count]:
         for human_readable_name, api_info in organization.items():
             leftpad_print(
@@ -161,9 +150,7 @@ def user(ghapi, *args, **kwargs):
             )
 
     leftpad_print("Repositories:", leftpad_length=0)
-
     repository_count = len(user_repositories) if verbose else CONCISE_COUNT
-
     for repository in user_repositories[:repository_count]:
         for human_readable_name, api_info in repository.items():
             leftpad_print(
@@ -199,7 +186,6 @@ def user(ghapi, *args, **kwargs):
     user_emails = functools.reduce(set.union, user_repository_emails, set())
 
     leftpad_print("Emails:", leftpad_length=0)
-
     for name, email in user_emails:
         leftpad_print("{}: {}".format(name, email), leftpad_length=2)
 

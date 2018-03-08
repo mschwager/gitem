@@ -10,7 +10,6 @@ def get_organization_information(ghapi, organization):
         organization
     )
 
-    # Order it so we get the same keys first every time
     api_name_to_human_readable_name = collections.OrderedDict([
         ('name', 'Organization Name'),
         ('description', 'Description'),
@@ -37,7 +36,6 @@ def get_organization_repositories(ghapi, organization):
         organization
     )
 
-    # Order it so we get the same keys first every time
     api_name_to_human_readable_name = collections.OrderedDict([
         ('name', 'Repository Name'),
         ('description', 'Description'),
@@ -69,7 +67,6 @@ def get_organization_members(ghapi, organization):
         organization
     )
 
-    # Order it so we get the same keys first every time
     api_name_to_human_readable_name = collections.OrderedDict([
         ('login', 'Username'),
         ('site_admin', 'Site Administrator'),
@@ -94,7 +91,6 @@ def get_repository_information(ghapi, owner, repository):
         repository
     )
 
-    # Order it so we get the same keys first every time
     api_name_to_human_readable_name = collections.OrderedDict([
         ('name', 'Repository Name'),
         ('description', 'Description'),
@@ -124,7 +120,6 @@ def get_repository_contributors(ghapi, owner, repository):
         repository
     )
 
-    # Order it so we get the same keys first every time
     api_name_to_human_readable_name = collections.OrderedDict([
         ('login', 'Username'),
         ('contributions', 'Contributions'),
@@ -147,7 +142,6 @@ def get_user_information(ghapi, username):
         username
     )
 
-    # Order it so we get the same keys first every time
     api_name_to_human_readable_name = collections.OrderedDict([
         ('login', 'Username'),
         ('html_url', 'Github URL'),
@@ -173,7 +167,6 @@ def get_user_organizations(ghapi, username):
         username
     )
 
-    # Order it so we get the same keys first every time
     api_name_to_human_readable_name = collections.OrderedDict([
         ('login', 'Organization'),
     ])
@@ -200,7 +193,6 @@ def get_user_repositories(ghapi, username):
         direction='desc',
     )
 
-    # Order it so we get the same keys first every time
     api_name_to_human_readable_name = collections.OrderedDict([
         ('name', 'Repository Name'),
         ('description', 'Description'),
