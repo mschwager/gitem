@@ -1,6 +1,13 @@
 from setuptools import setup
 
 import os
+import sys
+
+PACKAGE_DIRECTORY = 'lib'
+
+sys.path.append(PACKAGE_DIRECTORY)
+
+import gitem
 
 requirements_filename = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), 'requirements.txt')
@@ -15,12 +22,12 @@ with open(requirements_dev_filename) as fd:
     tests_require = [i.strip() for i in fd.readlines()]
 
 setup(
-    name='gitem',
-    version='0.6.1',
+    name=gitem.__name__,
+    version=gitem.__version__,
     description='A Github organization reconnaissance tool.',
     url='https://github.com/mschwager/gitem',
     packages=['gitem'],
-    package_dir={'': 'lib'},
+    package_dir={'': PACKAGE_DIRECTORY},
     license='GPLv3',
     classifiers=[
         'Environment :: Console',

@@ -1,18 +1,15 @@
 #!/usr/bin/env python
 
+from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import unicode_literals
 
 import argparse
 import functools
 import multiprocessing
-import os
-import sys
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-from gitem import api
-from gitem import analytics
+from . import api
+from . import analytics
 
 CONCISE_COUNT = 5
 
