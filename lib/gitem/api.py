@@ -294,6 +294,8 @@ class Api(object):
                                author=None, since=None, until=None):
         """
         Return commit information associated with a given repository
+
+        https://developer.github.com/v3/repos/commits/#list-commits-on-a-repository
         """
         method = "GET"
         endpoint = "/repos/{}/{}/commits".format(owner, repository)
