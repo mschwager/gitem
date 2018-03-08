@@ -27,7 +27,7 @@ OR
 $ git clone https://github.com/mschwager/gitem.git
 $ cd gitem
 $ pip install --requirement requirements.txt
-$ python lib/gitem/__main__.py -h
+$ PYTHONPATH=lib/ python -m gitem -h
 ```
 
 # Using
