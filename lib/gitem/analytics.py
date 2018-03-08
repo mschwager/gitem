@@ -42,6 +42,7 @@ def get_organization_repositories(ghapi, organization):
         ('name', 'Repository Name'),
         ('description', 'Description'),
         ('html_url', 'Github URL'),
+        ('clone_url', 'Clone URL'),
         ('watchers_count', 'Watchers'),
         ('stargazers_count', 'Stars'),
         ('forks_count', 'Forks'),
@@ -99,6 +100,7 @@ def get_repository_information(ghapi, owner, repository):
         ('description', 'Description'),
         ('homepage', 'Homepage'),
         ('html_url', 'Github URL'),
+        ('clone_url', 'Clone URL'),
         ('created_at', 'Created'),
         ('updated_at', 'Last Updated'),
         ('pushed_at', 'Last Pushed'),
@@ -203,6 +205,7 @@ def get_user_repositories(ghapi, username):
         ('name', 'Repository Name'),
         ('description', 'Description'),
         ('html_url', 'Github URL'),
+        ('clone_url', 'Clone URL'),
     ])
 
     human_readable_name_to_api_info = [
