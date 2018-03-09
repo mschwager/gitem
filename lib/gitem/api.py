@@ -163,14 +163,14 @@ class Api(object):
 
         return result
 
-    def get_users_public_repositories(self, username, type=None, sort=None, direction=None):
+    def get_users_public_repositories(self, username, type_=None, sort=None, direction=None):
         """
         Return public repositories associated with a given user
 
         https://developer.github.com/v3/repos/#list-user-repositories
         """
         type_values = ["all", "owner", "member"]
-        if type not in type_values and type is not None:
+        if type_ not in type_values and type_ is not None:
             raise ValueError("type must be one of {}".format(type_values))
 
         sort_values = ["created", "updated", "pushed", "full_name"]
@@ -185,8 +185,8 @@ class Api(object):
         endpoint = "/users/{}/repos".format(username)
         params = {}
 
-        if type:
-            params["type"] = type
+        if type_:
+            params["type"] = type_
         if sort:
             params["sort"] = sort
         if direction:
@@ -220,22 +220,22 @@ class Api(object):
         """
         return self.get_public_organization(organization)
 
-    def get_organizations_public_repositories(self, organization, type=None):
+    def get_organizations_public_repositories(self, organization, type_=None):
         """
         Return public repositories associated with a given organization
 
         https://developer.github.com/v3/repos/#list-organization-repositories
         """
         type_values = ["all", "public", "private", "forks", "sources", "member"]
-        if type not in type_values and type is not None:
+        if type_ not in type_values and type_ is not None:
             raise ValueError("type must be one of {}".format(type_values))
 
         method = "GET"
         endpoint = "/orgs/{}/repos".format(organization)
         params = {}
 
-        if type:
-            params["type"] = type
+        if type_:
+            params["type"] = type_
 
         result = self.paginated_json_call(method, endpoint, params)
 

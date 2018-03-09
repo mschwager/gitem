@@ -203,11 +203,11 @@ class TestApi(unittest.TestCase):
             self.assertEqual(result, expected)
 
     def test_get_users_public_repositories_bad_type(self):
-        type = ""
+        type_ = ""
         ghapi = api.Api()
 
         with self.assertRaises(ValueError):
-            ghapi.get_users_public_repositories("UNUSED", type=type)
+            ghapi.get_users_public_repositories("UNUSED", type_=type_)
 
     def test_get_users_public_repositories_bad_sort(self):
         sort = ""
@@ -224,11 +224,11 @@ class TestApi(unittest.TestCase):
             ghapi.get_users_public_repositories("UNUSED", direction=direction)
 
     def test_get_organizations_public_repositories_bad_type(self):
-        type = ""
+        type_ = ""
         ghapi = api.Api()
 
         with self.assertRaises(ValueError):
-            ghapi.get_organizations_public_repositories("UNUSED", type=type)
+            ghapi.get_organizations_public_repositories("UNUSED", type_=type_)
 
     def test_get_repository_contributors_bad_anon(self):
         anon = ""
