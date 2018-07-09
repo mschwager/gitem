@@ -184,11 +184,11 @@ def get_user_organizations(ghapi, username):
 
 
 def get_user_repositories(ghapi, username):
-    # TODO: Change this back to type='all' and find a good way to grab
+    # TODO: Change this back to type_='all' and find a good way to grab
     # the correct repository owners
     paged_user_repositories = ghapi.get_users_public_repositories(
         username,
-        type='owner',
+        type_='owner',
         sort='pushed',
         direction='desc',
     )
