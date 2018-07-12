@@ -21,10 +21,18 @@ requirements_dev_filename = os.path.join(
 with open(requirements_dev_filename) as fd:
     tests_require = [i.strip() for i in fd.readlines()]
 
+long_description_filename = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), 'README.md')
+
+with open(long_description_filename) as fd:
+    long_description = fd.read()
+
 setup(
     name=gitem.__name__,
     version=gitem.__version__,
     description='A Github organization reconnaissance tool.',
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     url='https://github.com/mschwager/gitem',
     packages=['gitem'],
     package_dir={'': PACKAGE_DIRECTORY},
