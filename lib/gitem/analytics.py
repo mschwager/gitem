@@ -17,7 +17,7 @@ def get_organization_information(ghapi, organization):
         organization
     )
 
-    api_name_to_human_readable_name = collections.OrderedDict([
+    api_name_to_human_readable_name = [
         ('name', 'Organization Name'),
         ('description', 'Description'),
         ('blog', 'Website'),
@@ -28,12 +28,12 @@ def get_organization_information(ghapi, organization):
         ('location', 'Location'),
         ('login', 'Username'),
         ('public_repos', '# of Public Repositories'),
-    ])
+    ]
 
-    human_readable_name_to_api_info = {
-        human_readable_name: organization_info[api_name]
-        for api_name, human_readable_name in api_name_to_human_readable_name.items()
-    }
+    human_readable_name_to_api_info = collections.OrderedDict([
+        (human_readable_name, organization_info[api_name])
+        for api_name, human_readable_name in api_name_to_human_readable_name
+    ])
 
     return human_readable_name_to_api_info
 
@@ -43,7 +43,7 @@ def get_organization_repositories(ghapi, organization):
         organization
     )
 
-    api_name_to_human_readable_name = collections.OrderedDict([
+    api_name_to_human_readable_name = [
         ('name', 'Repository Name'),
         ('description', 'Description'),
         ('html_url', 'Github URL'),
@@ -55,13 +55,13 @@ def get_organization_repositories(ghapi, organization):
         ('updated_at', 'Last Updated'),
         ('pushed_at', 'Last Pushed'),
 
-    ])
+    ]
 
     human_readable_name_to_api_info = [
-        {
-            human_readable_name: organization_repository[api_name]
-            for api_name, human_readable_name in api_name_to_human_readable_name.items()
-        }
+        collections.OrderedDict([
+            (human_readable_name, organization_repository[api_name])
+            for api_name, human_readable_name in api_name_to_human_readable_name
+        ])
         for organization_repositories, _ in paged_organization_repositories
         for organization_repository in organization_repositories
     ]
@@ -74,17 +74,17 @@ def get_organization_members(ghapi, organization):
         organization
     )
 
-    api_name_to_human_readable_name = collections.OrderedDict([
+    api_name_to_human_readable_name = [
         ('login', 'Username'),
         ('site_admin', 'Site Administrator'),
         ('html_url', 'Github URL'),
-    ])
+    ]
 
     human_readable_name_to_api_info = [
-        {
-            human_readable_name: organization_member[api_name]
-            for api_name, human_readable_name in api_name_to_human_readable_name.items()
-        }
+        collections.OrderedDict([
+            (human_readable_name, organization_member[api_name])
+            for api_name, human_readable_name in api_name_to_human_readable_name
+        ])
         for organization_members, _ in paged_organization_members
         for organization_member in organization_members
     ]
@@ -98,7 +98,7 @@ def get_repository_information(ghapi, owner, repository):
         repository
     )
 
-    api_name_to_human_readable_name = collections.OrderedDict([
+    api_name_to_human_readable_name = [
         ('name', 'Repository Name'),
         ('description', 'Description'),
         ('homepage', 'Homepage'),
@@ -111,12 +111,12 @@ def get_repository_information(ghapi, owner, repository):
         ('forks_count', 'Forks'),
         ('stargazers_count', 'Stars'),
         ('watchers_count', 'Watchers'),
-    ])
+    ]
 
-    human_readable_name_to_api_info = {
-        human_readable_name: repository_info[api_name]
-        for api_name, human_readable_name in api_name_to_human_readable_name.items()
-    }
+    human_readable_name_to_api_info = collections.OrderedDict([
+        (human_readable_name, repository_info[api_name])
+        for api_name, human_readable_name in api_name_to_human_readable_name
+    ])
 
     return human_readable_name_to_api_info
 
@@ -127,16 +127,16 @@ def get_repository_contributors(ghapi, owner, repository):
         repository
     )
 
-    api_name_to_human_readable_name = collections.OrderedDict([
+    api_name_to_human_readable_name = [
         ('login', 'Username'),
         ('contributions', 'Contributions'),
-    ])
+    ]
 
     human_readable_name_to_api_info = [
-        {
-            human_readable_name: repository_contributor[api_name]
-            for api_name, human_readable_name in api_name_to_human_readable_name.items()
-        }
+        collections.OrderedDict([
+            (human_readable_name, repository_contributor[api_name])
+            for api_name, human_readable_name in api_name_to_human_readable_name
+        ])
         for repository_contributors, _ in paged_repository_contributors
         for repository_contributor in repository_contributors
     ]
@@ -149,7 +149,7 @@ def get_user_information(ghapi, username):
         username
     )
 
-    api_name_to_human_readable_name = collections.OrderedDict([
+    api_name_to_human_readable_name = [
         ('login', 'Username'),
         ('html_url', 'Github URL'),
         ('name', 'Name'),
@@ -159,12 +159,12 @@ def get_user_information(ghapi, username):
         ('email', 'Email Address'),
         ('created_at', 'Created'),
         ('updated_at', 'Updated'),
-    ])
+    ]
 
-    human_readable_name_to_api_info = {
-        human_readable_name: user_info[api_name]
-        for api_name, human_readable_name in api_name_to_human_readable_name.items()
-    }
+    human_readable_name_to_api_info = collections.OrderedDict([
+        (human_readable_name, user_info[api_name])
+        for api_name, human_readable_name in api_name_to_human_readable_name
+    ])
 
     return human_readable_name_to_api_info
 
@@ -174,15 +174,15 @@ def get_user_organizations(ghapi, username):
         username
     )
 
-    api_name_to_human_readable_name = collections.OrderedDict([
+    api_name_to_human_readable_name = [
         ('login', 'Organization'),
-    ])
+    ]
 
     human_readable_name_to_api_info = [
-        {
-            human_readable_name: user_organization[api_name]
-            for api_name, human_readable_name in api_name_to_human_readable_name.items()
-        }
+        collections.OrderedDict([
+            (human_readable_name, user_organization[api_name])
+            for api_name, human_readable_name in api_name_to_human_readable_name
+        ])
         for user_organizations, _ in paged_user_organizations
         for user_organization in user_organizations
     ]
@@ -200,18 +200,18 @@ def get_user_repositories(ghapi, username):
         direction='desc',
     )
 
-    api_name_to_human_readable_name = collections.OrderedDict([
+    api_name_to_human_readable_name = [
         ('name', 'Repository Name'),
         ('description', 'Description'),
         ('html_url', 'Github URL'),
         ('clone_url', 'Clone URL'),
-    ])
+    ]
 
     human_readable_name_to_api_info = [
-        {
-            human_readable_name: user_repository[api_name]
-            for api_name, human_readable_name in api_name_to_human_readable_name.items()
-        }
+        collections.OrderedDict([
+            (human_readable_name, user_repository[api_name])
+            for api_name, human_readable_name in api_name_to_human_readable_name
+        ])
         for user_repositories, _ in paged_user_repositories
         for user_repository in user_repositories
     ]
