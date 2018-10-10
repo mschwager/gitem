@@ -13,12 +13,12 @@ import multiprocessing
 
 from . import api
 from . import analytics
-from . import outputter
+from . import output
 
 CONCISE_COUNT = 5
 
 
-def organization(ghapi, output, *args, **kwargs):
+def organization(ghapi, outputter, *args, **kwargs):
     organization = kwargs['name']
     verbose = kwargs['verbose']
 
@@ -36,7 +36,7 @@ def organization(ghapi, output, *args, **kwargs):
     )
 
     for human_readable_name, api_info in organization_info.items():
-        output.output(
+        outputter.output(
             human_readable_name,
             api_info,
             depth=0
@@ -51,16 +51,16 @@ def organization(ghapi, output, *args, **kwargs):
         reverse=True
     )
 
-    output.output("Public Members:", depth=0)
+    outputter.output("Public Members:", depth=0)
     member_count = len(members) if verbose else CONCISE_COUNT
     for member in members[:member_count]:
         for human_readable_name, api_info in member.items():
-            output.output(
+            outputter.output(
                 human_readable_name,
                 api_info,
                 depth=2
             )
-        output.output("", depth=0)
+        outputter.output("", depth=0)
 
     def repository_popularity(repository):
         return (
@@ -75,19 +75,19 @@ def organization(ghapi, output, *args, **kwargs):
         reverse=True
     )
 
-    output.output("Public Repositories:", depth=0)
+    outputter.output("Public Repositories:", depth=0)
     repository_count = len(repositories) if verbose else CONCISE_COUNT
     for repository in repositories[:repository_count]:
         for human_readable_name, api_info in repository.items():
-            output.output(
+            outputter.output(
                 human_readable_name,
                 api_info,
                 depth=2
             )
-        output.output("", depth=0)
+        outputter.output("", depth=0)
 
 
-def repository(ghapi, output, *args, **kwargs):
+def repository(ghapi, outputter, *args, **kwargs):
     repository = kwargs['name']
     owner = kwargs['owner']
     verbose = kwargs['verbose']
@@ -104,24 +104,24 @@ def repository(ghapi, output, *args, **kwargs):
     )
 
     for human_readable_name, api_info in repository_info.items():
-        output.output(
+        outputter.output(
             human_readable_name,
             api_info,
             depth=0
         )
 
-    output.output("Contributors:", depth=0)
+    outputter.output("Contributors:", depth=0)
     contributor_count = len(repository_contributors) if verbose else CONCISE_COUNT
     for contributor in repository_contributors[:contributor_count]:
         for human_readable_name, api_info in contributor.items():
-            output.output(
+            outputter.output(
                 human_readable_name,
                 api_info,
                 depth=2
             )
 
 
-def user(ghapi, output, *args, **kwargs):
+def user(ghapi, outputter, *args, **kwargs):
     username = kwargs['name']
     verbose = kwargs['verbose']
     processes = kwargs['processes']
@@ -140,27 +140,27 @@ def user(ghapi, output, *args, **kwargs):
     )
 
     for human_readable_name, api_info in user_info.items():
-        output.output(
+        outputter.output(
             human_readable_name,
             api_info,
             depth=0
         )
 
-    output.output("Organizations:", depth=0)
+    outputter.output("Organizations:", depth=0)
     organization_count = len(user_organizations) if verbose else CONCISE_COUNT
     for organization in user_organizations[:organization_count]:
         for human_readable_name, api_info in organization.items():
-            output.output(
+            outputter.output(
                 human_readable_name,
                 api_info,
                 depth=2
             )
 
-    output.output("Repositories:", depth=0)
+    outputter.output("Repositories:", depth=0)
     repository_count = len(user_repositories) if verbose else CONCISE_COUNT
     for repository in user_repositories[:repository_count]:
         for human_readable_name, api_info in repository.items():
-            output.output(
+            outputter.output(
                 human_readable_name,
                 api_info,
                 depth=2
@@ -193,9 +193,9 @@ def user(ghapi, output, *args, **kwargs):
 
     user_emails = functools.reduce(set.union, user_repository_emails, set())
 
-    output.output("Emails:", depth=0)
+    outputter.output("Emails:", depth=0)
     for name, email in user_emails:
-        output.output(name, email, depth=2)
+        outputter.output(name, email, depth=2)
 
 
 def parse_args():
@@ -227,9 +227,9 @@ def parse_args():
         '--output',
         action='store',
         choices=[
-            outputter.Stdout.name,
+            output.Stdout.name,
         ],
-        default=outputter.Stdout.name,
+        default=output.Stdout.name,
         help='show results in this format'
     )
 
@@ -278,22 +278,22 @@ def main():
     ghapi = api.Api(args.oauth2_token)
 
     outputters = {
-        outputter.Stdout.name: outputter.Stdout,
+        output.Stdout.name: output.Stdout,
     }
-    output = outputters[args.output]()
+    outputter = outputters[args.output]()
 
     try:
-        dispatch[args.command](ghapi, output, **vars(args))
+        dispatch[args.command](ghapi, outputter, **vars(args))
     except api.ApiCallException as e:
         if e.rate_limiting:
-            output.output(
+            outputter.output(
                 "Your API requests are being rate-limited. " +
                 "Please include an OAuth2 token and read the following:",
                 depth=0
             )
-            output.output(e.rate_limiting_url, depth=0)
+            outputter.output(e.rate_limiting_url, depth=0)
         elif e.not_found:
-            output.output(
+            outputter.output(
                 "The requested resource was not found or private. " +
                 "Please confirm that it exists.",
                 depth=0

@@ -15,9 +15,11 @@ class Stdout(base.Base):
     name = "stdout"
 
     def output(self, key, value="", depth=0):
-        if value:
+        if key and value:
             output = "{}: {}".format(key, value)
-        else:
+        elif key:
             output = "{}:".format(key)
+        else:
+            output = ""
 
         print(" " * depth + output, file=self.file)

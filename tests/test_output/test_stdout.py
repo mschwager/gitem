@@ -4,7 +4,7 @@ import io
 import textwrap
 import unittest
 
-from gitem import outputter
+from gitem import output
 
 
 class TestStdout(unittest.TestCase):
@@ -15,8 +15,8 @@ class TestStdout(unittest.TestCase):
 
     def test_basic(self):
         with io.StringIO() as stream:
-            output = outputter.Stdout(file_=stream)
-            output.output('key', 'value')
+            outputter = output.Stdout(file_=stream)
+            outputter.output('key', 'value')
             result = stream.getvalue()
 
         expected = self.dedent_helper('''
@@ -27,9 +27,9 @@ class TestStdout(unittest.TestCase):
 
     def test_depth(self):
         with io.StringIO() as stream:
-            output = outputter.Stdout(file_=stream)
-            output.output('key1', 'value1')
-            output.output('key2', 'value2', depth=2)
+            outputter = output.Stdout(file_=stream)
+            outputter.output('key1', 'value1')
+            outputter.output('key2', 'value2', depth=2)
             result = stream.getvalue()
 
         expected = self.dedent_helper('''
@@ -39,15 +39,25 @@ class TestStdout(unittest.TestCase):
 
         self.assertEqual(result, expected)
 
-    def test_key(self):
+    def test_just_key(self):
         with io.StringIO() as stream:
-            output = outputter.Stdout(file_=stream)
-            output.output('key')
+            outputter = output.Stdout(file_=stream)
+            outputter.output('key')
             result = stream.getvalue()
 
         expected = self.dedent_helper('''
             key:
         ''')
+
+        self.assertEqual(result, expected)
+
+    def test_no_key(self):
+        with io.StringIO() as stream:
+            outputter = output.Stdout(file_=stream)
+            outputter.output('')
+            result = stream.getvalue()
+
+        expected = '\n'
 
         self.assertEqual(result, expected)
 
