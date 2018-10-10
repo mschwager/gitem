@@ -13,15 +13,12 @@ import multiprocessing
 
 from . import api
 from . import analytics
+from . import outputter
 
 CONCISE_COUNT = 5
 
 
-def leftpad_print(s, leftpad_length=0):
-    print(" " * leftpad_length + s)
-
-
-def organization(ghapi, *args, **kwargs):
+def organization(ghapi, output, *args, **kwargs):
     organization = kwargs['name']
     verbose = kwargs['verbose']
 
@@ -39,9 +36,10 @@ def organization(ghapi, *args, **kwargs):
     )
 
     for human_readable_name, api_info in organization_info.items():
-        leftpad_print(
-            "{}: {}".format(human_readable_name, api_info),
-            leftpad_length=0
+        output.output(
+            human_readable_name,
+            api_info,
+            depth=0
         )
 
     def member_administrator(member):
@@ -53,15 +51,16 @@ def organization(ghapi, *args, **kwargs):
         reverse=True
     )
 
-    leftpad_print("Public Members:", leftpad_length=0)
+    output.output("Public Members:", depth=0)
     member_count = len(members) if verbose else CONCISE_COUNT
     for member in members[:member_count]:
         for human_readable_name, api_info in member.items():
-            leftpad_print(
-                "{}: {}".format(human_readable_name, api_info),
-                leftpad_length=2
+            output.output(
+                human_readable_name,
+                api_info,
+                depth=2
             )
-        leftpad_print("", leftpad_length=0)
+        output.output("", depth=0)
 
     def repository_popularity(repository):
         return (
@@ -76,18 +75,19 @@ def organization(ghapi, *args, **kwargs):
         reverse=True
     )
 
-    leftpad_print("Public Repositories:", leftpad_length=0)
+    output.output("Public Repositories:", depth=0)
     repository_count = len(repositories) if verbose else CONCISE_COUNT
     for repository in repositories[:repository_count]:
         for human_readable_name, api_info in repository.items():
-            leftpad_print(
-                "{}: {}".format(human_readable_name, api_info),
-                leftpad_length=2
+            output.output(
+                human_readable_name,
+                api_info,
+                depth=2
             )
-        leftpad_print("", leftpad_length=0)
+        output.output("", depth=0)
 
 
-def repository(ghapi, *args, **kwargs):
+def repository(ghapi, output, *args, **kwargs):
     repository = kwargs['name']
     owner = kwargs['owner']
     verbose = kwargs['verbose']
@@ -104,22 +104,24 @@ def repository(ghapi, *args, **kwargs):
     )
 
     for human_readable_name, api_info in repository_info.items():
-        leftpad_print(
-            "{}: {}".format(human_readable_name, api_info),
-            leftpad_length=0
+        output.output(
+            human_readable_name,
+            api_info,
+            depth=0
         )
 
-    leftpad_print("Contributors:", leftpad_length=0)
+    output.output("Contributors:", depth=0)
     contributor_count = len(repository_contributors) if verbose else CONCISE_COUNT
     for contributor in repository_contributors[:contributor_count]:
         for human_readable_name, api_info in contributor.items():
-            leftpad_print(
-                "{}: {}".format(human_readable_name, api_info),
-                leftpad_length=2
+            output.output(
+                human_readable_name,
+                api_info,
+                depth=2
             )
 
 
-def user(ghapi, *args, **kwargs):
+def user(ghapi, output, *args, **kwargs):
     username = kwargs['name']
     verbose = kwargs['verbose']
     processes = kwargs['processes']
@@ -138,27 +140,30 @@ def user(ghapi, *args, **kwargs):
     )
 
     for human_readable_name, api_info in user_info.items():
-        leftpad_print(
-            "{}: {}".format(human_readable_name, api_info),
-            leftpad_length=0
+        output.output(
+            human_readable_name,
+            api_info,
+            depth=0
         )
 
-    leftpad_print("Organizations:", leftpad_length=0)
+    output.output("Organizations:", depth=0)
     organization_count = len(user_organizations) if verbose else CONCISE_COUNT
     for organization in user_organizations[:organization_count]:
         for human_readable_name, api_info in organization.items():
-            leftpad_print(
-                "{}: {}".format(human_readable_name, api_info),
-                leftpad_length=2
+            output.output(
+                human_readable_name,
+                api_info,
+                depth=2
             )
 
-    leftpad_print("Repositories:", leftpad_length=0)
+    output.output("Repositories:", depth=0)
     repository_count = len(user_repositories) if verbose else CONCISE_COUNT
     for repository in user_repositories[:repository_count]:
         for human_readable_name, api_info in repository.items():
-            leftpad_print(
-                "{}: {}".format(human_readable_name, api_info),
-                leftpad_length=2
+            output.output(
+                human_readable_name,
+                api_info,
+                depth=2
             )
 
     user_repository_names = [
@@ -188,9 +193,9 @@ def user(ghapi, *args, **kwargs):
 
     user_emails = functools.reduce(set.union, user_repository_emails, set())
 
-    leftpad_print("Emails:", leftpad_length=0)
+    output.output("Emails:", depth=0)
     for name, email in user_emails:
-        leftpad_print("{}: {}".format(name, email), leftpad_length=2)
+        output.output(name, email, depth=2)
 
 
 def parse_args():
@@ -216,6 +221,16 @@ def parse_args():
         action='store',
         type=int,
         help='number of processes (for applicable commands)'
+    )
+    p.add_argument(
+        '-t',
+        '--output',
+        action='store',
+        choices=[
+            outputter.Stdout.name,
+        ],
+        default=outputter.Stdout.name,
+        help='show results in this format'
     )
 
     subparsers = p.add_subparsers(dest='command')
@@ -262,21 +277,26 @@ def main():
 
     ghapi = api.Api(args.oauth2_token)
 
+    outputters = {
+        outputter.Stdout.name: outputter.Stdout,
+    }
+    output = outputters[args.output]()
+
     try:
-        dispatch[args.command](ghapi, **vars(args))
+        dispatch[args.command](ghapi, output, **vars(args))
     except api.ApiCallException as e:
         if e.rate_limiting:
-            leftpad_print(
+            output.output(
                 "Your API requests are being rate-limited. " +
                 "Please include an OAuth2 token and read the following:",
-                leftpad_length=0
+                depth=0
             )
-            leftpad_print(e.rate_limiting_url, leftpad_length=0)
+            output.output(e.rate_limiting_url, depth=0)
         elif e.not_found:
-            leftpad_print(
+            output.output(
                 "The requested resource was not found or private. " +
                 "Please confirm that it exists.",
-                leftpad_length=0
+                depth=0
             )
         else:
             # Re-raise original exception
