@@ -6,7 +6,9 @@ from __future__ import (
 )
 
 from .stdout import Stdout
+from .json import Json
 
 __all__ = [
     'Stdout',
+    'Json',
 ]

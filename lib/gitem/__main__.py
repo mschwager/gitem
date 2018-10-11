@@ -220,6 +220,7 @@ def parse_args():
         action='store',
         choices=[
             output.Stdout.name,
+            output.Json.name,
         ],
         default=output.Stdout.name,
         help='show results in this format'
@@ -271,6 +272,7 @@ def main():
 
     outputters = {
         output.Stdout.name: output.Stdout,
+        output.Json.name: output.Json,
     }
     outputter = outputters[args.output]()
 
