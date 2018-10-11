@@ -183,10 +183,10 @@ def user(ghapi, outputter, *args, **kwargs):
     user_emails = functools.reduce(set.union, user_repository_emails, set())
 
     outputter.output(collections.OrderedDict([
-        ("Emails", collections.OrderedDict([
-            (name, email)
+        ("Emails", [
+            str((name, email))
             for name, email in user_emails
-        ])),
+        ]),
     ]))
 
 
