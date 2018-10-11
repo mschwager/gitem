@@ -10,8 +10,13 @@ from __future__ import (
 import abc
 import sys
 
+if sys.version_info >= (3, 4):
+    ABC = abc.ABC
+else:
+    ABC = abc.ABCMeta(str('ABC'), (), {})
 
-class Base(abc.ABC):
+
+class Base(ABC):
 
     name = "base"
 
