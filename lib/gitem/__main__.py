@@ -8,6 +8,7 @@ from __future__ import (
 )
 
 import argparse
+import collections
 import functools
 import multiprocessing
 
@@ -35,12 +36,7 @@ def organization(ghapi, outputter, *args, **kwargs):
         organization
     )
 
-    for human_readable_name, api_info in organization_info.items():
-        outputter.output(
-            human_readable_name,
-            api_info,
-            depth=0
-        )
+    outputter.output(organization_info)
 
     def member_administrator(member):
         return member['Site Administrator']
@@ -51,16 +47,16 @@ def organization(ghapi, outputter, *args, **kwargs):
         reverse=True
     )
 
-    outputter.output("Public Members:", depth=0)
     member_count = len(members) if verbose else CONCISE_COUNT
-    for member in members[:member_count]:
-        for human_readable_name, api_info in member.items():
-            outputter.output(
-                human_readable_name,
-                api_info,
-                depth=2
-            )
-        outputter.output("", depth=0)
+    outputter.output(collections.OrderedDict([
+        ("Public Members", collections.OrderedDict([
+            (member["Username"], collections.OrderedDict([
+                (human_readable_name, api_info)
+                for human_readable_name, api_info in member.items()
+            ]))
+            for member in members[:member_count]
+        ]))
+    ]))
 
     def repository_popularity(repository):
         return (
@@ -75,16 +71,16 @@ def organization(ghapi, outputter, *args, **kwargs):
         reverse=True
     )
 
-    outputter.output("Public Repositories:", depth=0)
     repository_count = len(repositories) if verbose else CONCISE_COUNT
-    for repository in repositories[:repository_count]:
-        for human_readable_name, api_info in repository.items():
-            outputter.output(
-                human_readable_name,
-                api_info,
-                depth=2
-            )
-        outputter.output("", depth=0)
+    outputter.output(collections.OrderedDict([
+        ("Public Repositories", collections.OrderedDict([
+            (repository["Repository Name"], collections.OrderedDict([
+                (human_readable_name, api_info)
+                for human_readable_name, api_info in repository.items()
+            ]))
+            for repository in repositories[:repository_count]
+        ]))
+    ]))
 
 
 def repository(ghapi, outputter, *args, **kwargs):
@@ -103,22 +99,18 @@ def repository(ghapi, outputter, *args, **kwargs):
         repository
     )
 
-    for human_readable_name, api_info in repository_info.items():
-        outputter.output(
-            human_readable_name,
-            api_info,
-            depth=0
-        )
+    outputter.output(repository_info)
 
-    outputter.output("Contributors:", depth=0)
     contributor_count = len(repository_contributors) if verbose else CONCISE_COUNT
-    for contributor in repository_contributors[:contributor_count]:
-        for human_readable_name, api_info in contributor.items():
-            outputter.output(
-                human_readable_name,
-                api_info,
-                depth=2
-            )
+    outputter.output(collections.OrderedDict([
+        ("Contributors", collections.OrderedDict([
+            (contributor, collections.OrderedDict([
+                (human_readable_name, api_info)
+                for human_readable_name, api_info in contributor.items()
+            ]))
+            for contributor in repository_contributors[:contributor_count]
+        ]))
+    ]))
 
 
 def user(ghapi, outputter, *args, **kwargs):
@@ -139,32 +131,29 @@ def user(ghapi, outputter, *args, **kwargs):
         username
     )
 
-    for human_readable_name, api_info in user_info.items():
-        outputter.output(
-            human_readable_name,
-            api_info,
-            depth=0
-        )
+    outputter.output(user_info)
 
-    outputter.output("Organizations:", depth=0)
     organization_count = len(user_organizations) if verbose else CONCISE_COUNT
-    for organization in user_organizations[:organization_count]:
-        for human_readable_name, api_info in organization.items():
-            outputter.output(
-                human_readable_name,
-                api_info,
-                depth=2
-            )
+    outputter.output(collections.OrderedDict([
+        ("Organizations", collections.OrderedDict([
+            (organization["Organization"], collections.OrderedDict([
+                (human_readable_name, api_info)
+                for human_readable_name, api_info in organization.items()
+            ]))
+            for organization in user_organizations[:organization_count]
+        ]))
+    ]))
 
-    outputter.output("Repositories:", depth=0)
     repository_count = len(user_repositories) if verbose else CONCISE_COUNT
-    for repository in user_repositories[:repository_count]:
-        for human_readable_name, api_info in repository.items():
-            outputter.output(
-                human_readable_name,
-                api_info,
-                depth=2
-            )
+    outputter.output(collections.OrderedDict([
+        ("Repositories", collections.OrderedDict([
+            (repository["Repository Name"], collections.OrderedDict([
+                (human_readable_name, api_info)
+                for human_readable_name, api_info in repository.items()
+            ]))
+            for repository in user_repositories[:repository_count]
+        ]))
+    ]))
 
     user_repository_names = [
         repository['Repository Name']
@@ -193,9 +182,12 @@ def user(ghapi, outputter, *args, **kwargs):
 
     user_emails = functools.reduce(set.union, user_repository_emails, set())
 
-    outputter.output("Emails:", depth=0)
-    for name, email in user_emails:
-        outputter.output(name, email, depth=2)
+    outputter.output(collections.OrderedDict([
+        ("Emails", collections.OrderedDict([
+            (name, email)
+            for name, email in user_emails
+        ])),
+    ]))
 
 
 def parse_args():
@@ -286,18 +278,22 @@ def main():
         dispatch[args.command](ghapi, outputter, **vars(args))
     except api.ApiCallException as e:
         if e.rate_limiting:
-            outputter.output(
-                "Your API requests are being rate-limited. " +
-                "Please include an OAuth2 token and read the following:",
-                depth=0
-            )
-            outputter.output(e.rate_limiting_url, depth=0)
+            outputter.output({
+                "Error": (
+                    "Your API requests are being rate-limited. " +
+                    "Please include an OAuth2 token and read the following:"
+                )
+            })
+            outputter.output({
+                "Rate Limiting": e.rate_limiting_url
+            })
         elif e.not_found:
-            outputter.output(
-                "The requested resource was not found or private. " +
-                "Please confirm that it exists.",
-                depth=0
-            )
+            outputter.output({
+                "Error": (
+                    "The requested resource was not found or private. " +
+                    "Please confirm that it exists."
+                )
+            })
         else:
             # Re-raise original exception
             raise

@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import collections
 import io
 import textwrap
 import unittest
@@ -14,9 +15,13 @@ class TestStdout(unittest.TestCase):
         return textwrap.dedent(s).lstrip()
 
     def test_basic(self):
+        data = collections.OrderedDict([
+            ('key', 'value'),
+        ])
+
         with io.StringIO() as stream:
             outputter = output.Stdout(file_=stream)
-            outputter.output('key', 'value')
+            outputter.output(data)
             result = stream.getvalue()
 
         expected = self.dedent_helper('''
@@ -25,39 +30,74 @@ class TestStdout(unittest.TestCase):
 
         self.assertEqual(result, expected)
 
-    def test_depth(self):
+    def test_list(self):
+        data = collections.OrderedDict([
+            ('key1', collections.OrderedDict([
+                ('key2', ['value1', 'value2']),
+            ])),
+        ])
+
         with io.StringIO() as stream:
             outputter = output.Stdout(file_=stream)
-            outputter.output('key1', 'value1')
-            outputter.output('key2', 'value2', depth=2)
+            outputter.output(data)
+            result = stream.getvalue()
+
+        expected = self.dedent_helper('''
+            key1:
+              key2:
+                value1
+                value2
+        ''')
+
+        self.assertEqual(result, expected)
+
+    def test_recurse(self):
+        data = collections.OrderedDict([
+            ('key1', 'value1'),
+            ('key2', collections.OrderedDict([
+                ('key3', 'value2'),
+            ])),
+        ])
+
+        with io.StringIO() as stream:
+            outputter = output.Stdout(file_=stream)
+            outputter.output(data)
             result = stream.getvalue()
 
         expected = self.dedent_helper('''
             key1: value1
-              key2: value2
+
+            key2:
+              key3: value2
         ''')
 
         self.assertEqual(result, expected)
 
-    def test_just_key(self):
+    def test_newline(self):
+        data = collections.OrderedDict([
+            ('key1', 'value1'),
+            ('key2', collections.OrderedDict([
+                ('key3', 'value2'),
+            ])),
+            ('key4', collections.OrderedDict([
+                ('key5', 'value3'),
+            ])),
+        ])
+
         with io.StringIO() as stream:
             outputter = output.Stdout(file_=stream)
-            outputter.output('key')
+            outputter.output(data)
             result = stream.getvalue()
 
         expected = self.dedent_helper('''
-            key:
+            key1: value1
+
+            key2:
+              key3: value2
+
+            key4:
+              key5: value3
         ''')
-
-        self.assertEqual(result, expected)
-
-    def test_no_key(self):
-        with io.StringIO() as stream:
-            outputter = output.Stdout(file_=stream)
-            outputter.output('')
-            result = stream.getvalue()
-
-        expected = '\n'
 
         self.assertEqual(result, expected)
 
