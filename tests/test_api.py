@@ -213,7 +213,7 @@ class TestApi(unittest.TestCase):
         mocked_json_values = [mocked_json_values[0]]
 
         mocked_api = self.paged_api_will_return(mocked_json_values)
-        mocked_api.requester.return_value.status_code = mock.PropertyMock(
+        mocked_api.requester.return_value.ok = mock.PropertyMock(
             side_effect=StopIteration
         )
 
