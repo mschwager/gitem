@@ -34,7 +34,10 @@ setup(
     long_description=long_description,
     long_description_content_type='text/markdown',
     url='https://github.com/mschwager/gitem',
-    packages=['gitem'],
+    packages=[
+        'gitem',
+        'gitem.output',
+    ],
     package_dir={'': PACKAGE_DIRECTORY},
     license='GPLv3',
     classifiers=[
