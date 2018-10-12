@@ -21,6 +21,9 @@ class TestApi(unittest.TestCase):
     def assertOk(self, status_code):
         self.assertEqual(status_code, requests.codes.OK)
 
+    def assertEmpty(self, iterable):
+        self.assertEqual(len(iterable), 0)
+
     @staticmethod
     def api_will_return(json_return_value, status_code=requests.codes.OK, oauth2_token=None):
         assert isinstance(json_return_value, dict)
@@ -201,6 +204,22 @@ class TestApi(unittest.TestCase):
 
             self.assertOk(status_code)
             self.assertEqual(result, expected)
+
+    def test_paged_pep_479(self):
+        mocked_json_values = [
+            mocked_api_results.get_result_value(result)
+            for result in mocked_api_results.PAGED_API_RESULT
+        ]
+        mocked_json_values = [mocked_json_values[0]]
+
+        mocked_api = self.paged_api_will_return(mocked_json_values)
+        mocked_api.requester.return_value.status_code = mock.PropertyMock(
+            side_effect=StopIteration
+        )
+
+        result = list(mocked_api.get_organizations_public_repositories("unused"))
+
+        self.assertEmpty(result)
 
     def test_get_users_public_repositories_bad_type(self):
         type_ = ""

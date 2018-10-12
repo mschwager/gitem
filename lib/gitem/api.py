@@ -123,7 +123,13 @@ class Api(object):
         next_link = True
         while next_link:
             response = self.call(method, url, params)
-            yield (response.json(), response.status_code)
+
+            try:
+                yield (response.json(), response.status_code)
+            except StopIteration:
+                # Handle PEP 479
+                return
+
             next_link = response.links.get("next", {})
             url = next_link.get("url")
 
