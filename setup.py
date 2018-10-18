@@ -1,4 +1,7 @@
-from setuptools import setup
+from setuptools import (
+    find_packages,
+    setup,
+)
 
 import os
 import sys
@@ -34,10 +37,7 @@ setup(
     long_description=long_description,
     long_description_content_type='text/markdown',
     url='https://github.com/mschwager/gitem',
-    packages=[
-        'gitem',
-        'gitem.output',
-    ],
+    packages=find_packages(where=PACKAGE_DIRECTORY),
     package_dir={'': PACKAGE_DIRECTORY},
     license='GPLv3',
     classifiers=[
