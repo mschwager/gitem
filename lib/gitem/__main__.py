@@ -27,16 +27,13 @@ def organization(ghapi, outputter, *args, **kwargs):
         ghapi,
         organization
     )
-    organization_repositories = analytics.get_organization_repositories(
-        ghapi,
-        organization
-    )
+
+    outputter.output(organization_info)
+
     organization_members = analytics.get_organization_members(
         ghapi,
         organization
     )
-
-    outputter.output(organization_info)
 
     def member_administrator(member):
         return member['Site Administrator']
@@ -57,6 +54,11 @@ def organization(ghapi, outputter, *args, **kwargs):
             for member in members[:member_count]
         ]))
     ]))
+
+    organization_repositories = analytics.get_organization_repositories(
+        ghapi,
+        organization
+    )
 
     def repository_popularity(repository):
         return (
@@ -93,13 +95,14 @@ def repository(ghapi, outputter, *args, **kwargs):
         owner,
         repository
     )
+
+    outputter.output(repository_info)
+
     repository_contributors = analytics.get_repository_contributors(
         ghapi,
         owner,
         repository
     )
-
-    outputter.output(repository_info)
 
     contributor_count = len(repository_contributors) if verbose else CONCISE_COUNT
     outputter.output(collections.OrderedDict([
@@ -122,16 +125,13 @@ def user(ghapi, outputter, *args, **kwargs):
         ghapi,
         username
     )
+
+    outputter.output(user_info)
+
     user_organizations = analytics.get_user_organizations(
         ghapi,
         username
     )
-    user_repositories = analytics.get_user_repositories(
-        ghapi,
-        username
-    )
-
-    outputter.output(user_info)
 
     organization_count = len(user_organizations) if verbose else CONCISE_COUNT
     outputter.output(collections.OrderedDict([
@@ -143,6 +143,11 @@ def user(ghapi, outputter, *args, **kwargs):
             for organization in user_organizations[:organization_count]
         ]))
     ]))
+
+    user_repositories = analytics.get_user_repositories(
+        ghapi,
+        username
+    )
 
     repository_count = len(user_repositories) if verbose else CONCISE_COUNT
     outputter.output(collections.OrderedDict([
