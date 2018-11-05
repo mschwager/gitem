@@ -1,4 +1,4 @@
-nose2==0.7.3
-flake8==3.2.1
-coveralls==1.2.0
-pyfakefs==3.3
+nose2==0.8.0
+flake8==3.6.0
+coveralls==1.5.1
+pyfakefs==3.5
