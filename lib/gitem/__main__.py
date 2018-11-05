@@ -60,9 +60,9 @@ def organization(ghapi, outputter, *args, **kwargs):
 
     def repository_popularity(repository):
         return (
-            int(repository['Watchers']) +
-            int(repository['Stars']) +
-            int(repository['Forks'])
+            int(repository['Watchers'])
+            + int(repository['Stars'])
+            + int(repository['Forks'])
         )
 
     repositories = sorted(
@@ -282,8 +282,8 @@ def main():
         if e.rate_limiting:
             outputter.output({
                 "Error": (
-                    "Your API requests are being rate-limited. " +
-                    "Please include an OAuth2 token and read the following:"
+                    "Your API requests are being rate-limited. "
+                    + "Please include an OAuth2 token and read the following:"
                 )
             })
             outputter.output({
@@ -292,8 +292,8 @@ def main():
         elif e.not_found:
             outputter.output({
                 "Error": (
-                    "The requested resource was not found or private. " +
-                    "Please confirm that it exists."
+                    "The requested resource was not found or private. "
+                    + "Please confirm that it exists."
                 )
             })
         else:

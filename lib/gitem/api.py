@@ -52,8 +52,8 @@ class ApiCallException(BaseException):
     @property
     def rate_limiting(self):
         return (
-            self.forbidden and
-            self.message.get('documentation_url') == self.rate_limiting_url
+            self.forbidden
+            and self.message.get('documentation_url') == self.rate_limiting_url
         )
 
     def __str__(self):
