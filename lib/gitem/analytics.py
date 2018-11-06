@@ -54,7 +54,6 @@ def get_organization_repositories(ghapi, organization):
         ('created_at', 'Created'),
         ('updated_at', 'Last Updated'),
         ('pushed_at', 'Last Pushed'),
-
     ]
 
     human_readable_name_to_api_info = [
