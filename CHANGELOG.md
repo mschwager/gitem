@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 This project adheres to [CHANGELOG](http://keepachangelog.com/).
 
+## [0.8.1] - 2018-11-06
+### Security
+- Updated requests dependency per CVE-2018-18074
+
 ## [0.8.0] - 2018-10-12
 ### Added
 - The --output flag which supports JSON output
