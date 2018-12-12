@@ -11,6 +11,7 @@ except ImportError:
     import mock
 
 import requests
+import pytest
 
 from gitem import analytics
 from gitem import api
@@ -55,7 +56,7 @@ class TestAnalytics(unittest.TestCase):
             ('# of Public Repositories', 'pr1'),
         ])
 
-        self.assertEqual(result, expected)
+        assert result == expected
 
     def test_get_organization_repositories(self):
         return_value = [
@@ -98,7 +99,7 @@ class TestAnalytics(unittest.TestCase):
             ]),
         ]
 
-        self.assertEqual(result, expected)
+        assert result == expected
 
     def test_get_organization_members(self):
         return_value = [
@@ -140,7 +141,7 @@ class TestAnalytics(unittest.TestCase):
             ]),
         ]
 
-        self.assertEqual(result, expected)
+        assert result == expected
 
     def test_get_repository_information(self):
         return_value = (
@@ -183,7 +184,7 @@ class TestAnalytics(unittest.TestCase):
             ('Watchers', 'wc1'),
         ])
 
-        self.assertEqual(result, expected)
+        assert result == expected
 
     def test_get_repository_contributors(self):
         return_value = [
@@ -221,7 +222,7 @@ class TestAnalytics(unittest.TestCase):
             ]),
         ]
 
-        self.assertEqual(result, expected)
+        assert result == expected
 
     def test_get_user_information(self):
         return_value = (
@@ -258,7 +259,7 @@ class TestAnalytics(unittest.TestCase):
             ('Updated', 'ua1'),
         ])
 
-        self.assertEqual(result, expected)
+        assert result == expected
 
     def test_get_user_organization(self):
         return_value = [
@@ -292,7 +293,7 @@ class TestAnalytics(unittest.TestCase):
             ]),
         ]
 
-        self.assertEqual(result, expected)
+        assert result == expected
 
     def test_get_user_repositories(self):
         return_value = [
@@ -323,7 +324,7 @@ class TestAnalytics(unittest.TestCase):
             ])
         ]
 
-        self.assertEqual(result, expected)
+        assert result == expected
 
     def test_get_repository_commit_emails_basic(self):
         return_value = [
@@ -349,7 +350,7 @@ class TestAnalytics(unittest.TestCase):
 
         expected = {('username1', 'email1')}
 
-        self.assertEqual(result, expected)
+        assert result == expected
 
     def test_get_repository_commit_emails_conflict(self):
         def conflict_generator():
@@ -367,7 +368,7 @@ class TestAnalytics(unittest.TestCase):
 
         expected = set()
 
-        self.assertEqual(result, expected)
+        assert result == expected
 
     def test_get_repository_commit_emails_not_conflict(self):
         def not_conflict_generator():
@@ -381,7 +382,7 @@ class TestAnalytics(unittest.TestCase):
             return_value=return_value
         )
 
-        with self.assertRaises(api.ApiCallException):
+        with pytest.raises(api.ApiCallException):
             analytics.get_repository_commit_emails(ghapi, "unused", "unused")
 
 

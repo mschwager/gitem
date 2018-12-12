@@ -10,6 +10,7 @@ except ImportError:
     import mock
 
 import requests
+import pytest
 
 from gitem import api
 
@@ -19,10 +20,10 @@ import mocked_api_results
 class TestApi(unittest.TestCase):
 
     def assertOk(self, status_code):
-        self.assertEqual(status_code, requests.codes.OK)
+        assert status_code == requests.codes.OK
 
     def assertEmpty(self, iterable):
-        self.assertEqual(len(iterable), 0)
+        assert len(iterable) == 0
 
     @staticmethod
     def api_will_return(json_return_value, status_code=requests.codes.OK, oauth2_token=None):
@@ -82,7 +83,7 @@ class TestApi(unittest.TestCase):
         )
 
         self.assertOk(status_code)
-        self.assertEqual(result, expected)
+        assert result == expected
 
     def test_invalid_json(self):
         will_return = mocked_api_results.INVALID_JSON_RESULT
@@ -91,10 +92,10 @@ class TestApi(unittest.TestCase):
 
         # The API call we make doesn't matter, it will return the same result
         # no matter what
-        with self.assertRaises(api.ApiCallException) as e:
+        with pytest.raises(api.ApiCallException) as e:
             mocked_api.get_public_organization("unused")
 
-        self.assertTrue(e.exception.bad_request)
+        assert e.value.bad_request
 
     def test_invalid_json_argument_type(self):
         will_return = mocked_api_results.BAD_JSON_VALUES_RESULT
@@ -103,10 +104,10 @@ class TestApi(unittest.TestCase):
 
         # The API call we make doesn't matter, it will return the same result
         # no matter what
-        with self.assertRaises(api.ApiCallException) as e:
+        with pytest.raises(api.ApiCallException) as e:
             mocked_api.get_public_organization("unused")
 
-        self.assertTrue(e.exception.bad_request)
+        assert e.value.bad_request
 
     def test_invalid_json_field(self):
         will_return = mocked_api_results.INVALID_FIELDS_RESULT
@@ -115,10 +116,10 @@ class TestApi(unittest.TestCase):
 
         # The API call we make doesn't matter, it will return the same result
         # no matter what
-        with self.assertRaises(api.ApiCallException) as e:
+        with pytest.raises(api.ApiCallException) as e:
             mocked_api.get_public_organization("unused")
 
-        self.assertTrue(e.exception.unprocessable_entity)
+        assert e.value.unprocessable_entity
 
     def test_bad_credentials(self):
         will_return = mocked_api_results.BAD_CREDENTIALS_RESULT
@@ -127,10 +128,10 @@ class TestApi(unittest.TestCase):
 
         # The API call we make doesn't matter, it will return the same result
         # no matter what
-        with self.assertRaises(api.ApiCallException) as e:
+        with pytest.raises(api.ApiCallException) as e:
             mocked_api.get_public_organization("unused")
 
-        self.assertTrue(e.exception.unauthorized)
+        assert e.value.unauthorized
 
     def test_maximum_bad_credentials(self):
         will_return = mocked_api_results.MAXIMUM_BAD_CREDENTIALS_RESULT
@@ -139,10 +140,10 @@ class TestApi(unittest.TestCase):
 
         # The API call we make doesn't matter, it will return the same result
         # no matter what
-        with self.assertRaises(api.ApiCallException) as e:
+        with pytest.raises(api.ApiCallException) as e:
             mocked_api.get_public_organization("unused")
 
-        self.assertTrue(e.exception.forbidden)
+        assert e.value.forbidden
 
     def test_not_found(self):
         will_return = mocked_api_results.NOT_FOUND_RESULT
@@ -151,10 +152,10 @@ class TestApi(unittest.TestCase):
 
         # The API call we make doesn't matter, it will return the same result
         # no matter what
-        with self.assertRaises(api.ApiCallException) as e:
+        with pytest.raises(api.ApiCallException) as e:
             mocked_api.get_public_organization("unused")
 
-        self.assertTrue(e.exception.not_found)
+        assert e.value.not_found
 
     def test_authenticated_endpoint_ok(self):
         will_return = mocked_api_results.STANDARD_API_RESULT
@@ -171,7 +172,7 @@ class TestApi(unittest.TestCase):
         )
 
         self.assertOk(status_code)
-        self.assertEqual(result, expected)
+        assert result == expected
 
     def test_authenticated_endpoint_missing_token(self):
         will_return = mocked_api_results.STANDARD_API_RESULT
@@ -181,7 +182,7 @@ class TestApi(unittest.TestCase):
             oauth2_token=None
         )
 
-        with self.assertRaises(api.AuthenticationRequiredException):
+        with pytest.raises(api.AuthenticationRequiredException):
             mocked_api.get_organization("unused")
 
     def test_paged_ok(self):
@@ -203,7 +204,7 @@ class TestApi(unittest.TestCase):
             )
 
             self.assertOk(status_code)
-            self.assertEqual(result, expected)
+            assert result == expected
 
     def test_paged_pep_479(self):
         mocked_json_values = [
@@ -225,35 +226,35 @@ class TestApi(unittest.TestCase):
         type_ = ""
         ghapi = api.Api()
 
-        with self.assertRaises(ValueError):
+        with pytest.raises(ValueError):
             ghapi.get_users_public_repositories("UNUSED", type_=type_)
 
     def test_get_users_public_repositories_bad_sort(self):
         sort = ""
         ghapi = api.Api()
 
-        with self.assertRaises(ValueError):
+        with pytest.raises(ValueError):
             ghapi.get_users_public_repositories("UNUSED", sort=sort)
 
     def test_get_users_public_repositories_bad_direction(self):
         direction = ""
         ghapi = api.Api()
 
-        with self.assertRaises(ValueError):
+        with pytest.raises(ValueError):
             ghapi.get_users_public_repositories("UNUSED", direction=direction)
 
     def test_get_organizations_public_repositories_bad_type(self):
         type_ = ""
         ghapi = api.Api()
 
-        with self.assertRaises(ValueError):
+        with pytest.raises(ValueError):
             ghapi.get_organizations_public_repositories("UNUSED", type_=type_)
 
     def test_get_repository_contributors_bad_anon(self):
         anon = ""
         ghapi = api.Api()
 
-        with self.assertRaises(ValueError):
+        with pytest.raises(ValueError):
             ghapi.get_repository_contributors("UNUSED", "UNUSED", anon=anon)
 
     def test_get_repository_contributors_ok(self):
@@ -275,7 +276,7 @@ class TestApi(unittest.TestCase):
             )
 
             self.assertOk(status_code)
-            self.assertEqual(result, expected)
+            assert result == expected
 
 
 if __name__ == "__main__":

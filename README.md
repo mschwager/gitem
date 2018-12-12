@@ -150,12 +150,13 @@ First, install development packages:
 
 ```
 $ pip install -r requirements-dev.txt
+$ pip install -e .
 ```
 
 ## Testing
 
 ```
-$ nose2
+$ pytest
 ```
 
 ## Linting
@@ -167,5 +168,5 @@ $ flake8
 ## Coverage
 
 ```
-$ nose2 --with-coverage
+$ pytest --cov
 ```

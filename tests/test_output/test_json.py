@@ -28,7 +28,7 @@ class TestJson(unittest.TestCase):
             {"key":"value"}
         ''')
 
-        self.assertEqual(result, expected)
+        assert result == expected
 
     def test_list(self):
         data = collections.OrderedDict([
@@ -46,7 +46,7 @@ class TestJson(unittest.TestCase):
             {"key1":{"key2":["value1","value2"]}}
         ''')
 
-        self.assertEqual(result, expected)
+        assert result == expected
 
     def test_recurse(self):
         data = collections.OrderedDict([
@@ -65,7 +65,7 @@ class TestJson(unittest.TestCase):
             {"key1":"value1","key2":{"key3":"value2"}}
         ''')
 
-        self.assertEqual(result, expected)
+        assert result == expected
 
     def test_multi(self):
         data1 = collections.OrderedDict([
@@ -86,7 +86,7 @@ class TestJson(unittest.TestCase):
             {"key2":"value2"}
         ''')
 
-        self.assertEqual(result, expected)
+        assert result == expected
 
 
 if __name__ == "__main__":

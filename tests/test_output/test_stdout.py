@@ -28,7 +28,7 @@ class TestStdout(unittest.TestCase):
             key: value
         ''')
 
-        self.assertEqual(result, expected)
+        assert result == expected
 
     def test_list(self):
         data = collections.OrderedDict([
@@ -49,7 +49,7 @@ class TestStdout(unittest.TestCase):
                 value2
         ''')
 
-        self.assertEqual(result, expected)
+        assert result == expected
 
     def test_recurse(self):
         data = collections.OrderedDict([
@@ -71,7 +71,7 @@ class TestStdout(unittest.TestCase):
               key3: value2
         ''')
 
-        self.assertEqual(result, expected)
+        assert result == expected
 
     def test_newline(self):
         data = collections.OrderedDict([
@@ -99,7 +99,7 @@ class TestStdout(unittest.TestCase):
               key5: value3
         ''')
 
-        self.assertEqual(result, expected)
+        assert result == expected
 
     def test_multi(self):
         data1 = collections.OrderedDict([
@@ -120,7 +120,7 @@ class TestStdout(unittest.TestCase):
             key2: value2
         ''')
 
-        self.assertEqual(result, expected)
+        assert result == expected
 
 
 if __name__ == "__main__":
