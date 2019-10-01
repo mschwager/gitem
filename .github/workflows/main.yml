@@ -1,3 +1,4 @@
+name: Dlint
 on: [push]
 jobs:
   dlint_job:
