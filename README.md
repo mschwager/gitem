@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/mschwager/gitem.svg?branch=master)](https://travis-ci.org/mschwager/gitem)
 [![Coverage Status](https://coveralls.io/repos/github/mschwager/gitem/badge.svg?branch=master)](https://coveralls.io/github/mschwager/gitem?branch=master)
-[![Dlint Status](https://github.com/mschwager/gitem/workflows/Dlint/badge.svg)](https://github.com/mschwager/gitem/actions)
+[![Dlint Status](https://github.com/mschwager/gitem/workflows/Dlint/badge.svg)](https://github.com/mschwager/gitem/actions?workflow=Dlint)
 [![Python Versions](https://img.shields.io/pypi/pyversions/gitem.svg)](https://img.shields.io/pypi/pyversions/gitem.svg)
 [![PyPI Version](https://img.shields.io/pypi/v/gitem.svg)](https://img.shields.io/pypi/v/gitem.svg)
 
