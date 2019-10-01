@@ -1,9 +1,8 @@
 on: [push]
-
 jobs:
   dlint_job:
     runs-on: ubuntu-latest
-    name: Dlint job
+    name: Dlint
     steps:
     - uses: actions/checkout@master
     - uses: mschwager/dlint-action@master
