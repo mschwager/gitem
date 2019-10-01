@@ -1,1 +1,1 @@
-exec("print('HAI THERE')")
+exec("print('HAI')")
