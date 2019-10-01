@@ -7,4 +7,4 @@ jobs:
     steps:
     - name: Dlint step
       id: dlint
-      uses: mschwager/dlint-action
+      uses: mschwager/dlint-action@master
