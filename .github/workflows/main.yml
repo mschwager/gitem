@@ -1,7 +1,7 @@
 name: Dlint
-on: [push]
+on: [push, pull_request]
 jobs:
-  dlint_job:
+  dlint:
     runs-on: ubuntu-latest
     name: Dlint
     steps:
