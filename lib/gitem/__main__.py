@@ -107,7 +107,7 @@ def repository(ghapi, outputter, *args, **kwargs):
     contributor_count = len(repository_contributors) if verbose else CONCISE_COUNT
     outputter.output(collections.OrderedDict([
         ("Contributors", collections.OrderedDict([
-            (contributor, collections.OrderedDict([
+            (contributor["Username"], collections.OrderedDict([
                 (human_readable_name, api_info)
                 for human_readable_name, api_info in contributor.items()
             ]))
