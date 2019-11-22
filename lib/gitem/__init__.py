@@ -10,7 +10,7 @@ from . import analytics
 from . import output
 
 __name__ = 'gitem'
-__version__ = '0.8.1'
+__version__ = '0.9.0'
 __all__ = [
     'api',
     'analytics',

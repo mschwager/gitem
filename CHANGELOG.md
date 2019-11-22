@@ -3,6 +3,16 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 This project adheres to [CHANGELOG](http://keepachangelog.com/).
 
+## [0.9.0] - 2019-11-22
+### Added
+- Python 3.8 support
+
+### Fixed
+- Specifying incorrect contributor information ([#10](https://github.com/mschwager/gitem/issues/10))
+
+### Removed
+- Official Python 3.4 support, it's EOL
+
 ## [0.8.1] - 2018-11-06
 ### Security
 - Updated requests dependency per CVE-2018-18074
