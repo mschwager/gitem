@@ -5,6 +5,10 @@ This project adheres to [CHANGELOG](http://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [0.9.2] - 2018-11-22
+### Fixed
+- Python package version classifiers
+
 ## [0.9.1] - 2018-11-22
 ### Fixed
 - Build when using Python 3.8
